@@ -2,7 +2,6 @@
 
 @section('content')
     <h2>Edit Destinasi</h2>
-    </x-slot>
 
     <div class="card mt-4">
         <div class="card-body">

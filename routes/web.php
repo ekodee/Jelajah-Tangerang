@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\ProfileController;
@@ -14,8 +15,8 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::resource('kategori', CategoryController::class)->middleware(['auth', 'verified']);
-
 Route::resource('destinasi', DestinationController::class)->middleware(['auth', 'verified']);
+Route::resource('artikel', ArticleController::class)->middleware(['auth', 'verified']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
