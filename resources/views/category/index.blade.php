@@ -1,10 +1,10 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="d-flex justify-content-between align-items-center">
-            <h2>Daftar Kategori</h2>
-            <a class="btn btn-success" href="{{ route('kategori.create') }}">Tambah Kategori</a>
-        </div>
-    </x-slot>
+@extends('layouts.app')
+
+@section('content')
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>Daftar Kategori</h2>
+        <a class="btn btn-success" href="{{ route('kategori.create') }}">Tambah Kategori</a>
+    </div>
 
     <div class="card mt-4">
         <div class="card-body">
@@ -26,8 +26,7 @@
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $category->name }}</td>
                             <td>
-                                <a href="{{ route('kategori.edit', $category->id) }}"
-                                    class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{{ route('kategori.edit', $category->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                 <form action="{{ route('kategori.destroy', $category->id) }}" method="POST"
                                     class="d-inline">
                                     @csrf
@@ -48,4 +47,4 @@
             {{ $categories->links() }}
         </div>
     </div>
-</x-app-layout>
+@endsection

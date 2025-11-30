@@ -1,7 +1,7 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2>Tambah Destinasi</h2>
-    </x-slot>
+@extends('layouts.app')
+
+@section('content')
+    <h2>Tambah Destinasi</h2>
 
     <div class="card mt-4">
         <div class="card-body">
@@ -12,8 +12,7 @@
                     <label class="form-label">Kategori</label>
                     <select name="category_id" class="form-control">
                         @foreach ($categories as $category)
-                            <option value="{{ $category->id }}"
-                                {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
                                 {{ $category->name }}
                             </option>
                         @endforeach
@@ -84,4 +83,4 @@
             </form>
         </div>
     </div>
-</x-app-layout>
+@endsection

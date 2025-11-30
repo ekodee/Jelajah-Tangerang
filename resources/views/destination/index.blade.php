@@ -1,10 +1,10 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="d-flex justify-content-between align-items-center">
-            <h2>Daftar Destinasi</h2>
-            <a class="btn btn-success" href="{{ route('destinasi.create') }}">Tambah Destinasi</a>
-        </div>
-    </x-slot>
+@extends('layouts.app')
+
+@section('content')
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>Daftar Destinasi</h2>
+        <a class="btn btn-success" href="{{ route('destinasi.create') }}">Tambah Destinasi</a>
+    </div>
 
     <div class="card mt-4">
         <div class="card-body">
@@ -58,4 +58,4 @@
             {{ $destinations->links() }}
         </div>
     </div>
-</x-app-layout>
+@endsection

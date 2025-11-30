@@ -1,6 +1,7 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2>Edit Destinasi</h2>
+@extends('layouts.app')
+
+@section('content')
+    <h2>Edit Destinasi</h2>
     </x-slot>
 
     <div class="card mt-4">
@@ -23,8 +24,7 @@
 
                 <div class="mb-3">
                     <label class="form-label">Nama Destinasi</label>
-                    <input type="text" name="name" class="form-control"
-                        value="{{ old('name', $destinasi->name) }}">
+                    <input type="text" name="name" class="form-control" value="{{ old('name', $destinasi->name) }}">
                 </div>
 
                 <div class="mb-3">
@@ -71,4 +71,4 @@
             </form>
         </div>
     </div>
-</x-app-layout>
+@endsection
