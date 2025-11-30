@@ -2,8 +2,8 @@
 
 @section('content')
     <div class="d-flex justify-content-between align-items-center">
-        <h2>Daftar Kategori</h2>
-        <a class="btn btn-success" href="{{ route('kategori.create') }}">Tambah Kategori</a>
+        <h2>Daftar Destinasi</h2>
+        <a class="btn btn-success" href="{{ route('destinasi.create') }}">Tambah Destinasi</a>
     </div>
 
     <div class="card mt-4">
@@ -16,18 +16,29 @@
                 <thead>
                     <tr>
                         <th width="10px">No</th>
-                        <th>Nama kategori</th>
+                        <th>Nama</th>
+                        <th>Kategori</th>
+                        <th>Alamat</th>
+                        <th>Jam Buka</th>
+                        <th>Foto</th>
                         <th width="150px">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($categories as $category)
+                    @forelse($destinations as $destination)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $category->name }}</td>
+                            <td>{{ $destination->name }}</td>
+                            <td>{{ $destination->category->name }}</td>
+                            <td>{{ $destination->address }}</td>
+                            <td>{{ $destination->open_hours }}</td>
                             <td>
-                                <a href="{{ route('kategori.edit', $category->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                <form action="{{ route('kategori.destroy', $category->id) }}" method="POST"
+                                <img src="{{ asset('storage/' . $destination->photo) }}" alt="" width="80">
+                            </td>
+                            <td>
+                                <a href="{{ route('destinasi.edit', $destination->id) }}"
+                                    class="btn btn-warning btn-sm">Edit</a>
+                                <form action="{{ route('destinasi.destroy', $destination->id) }}" method="POST"
                                     class="d-inline">
                                     @csrf
                                     @method('DELETE')
@@ -38,13 +49,13 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="4" class="text-center">Belum ada kategori</td>
+                            <td colspan="7" class="text-center">Belum ada destinasi</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
 
-            {{ $categories->links() }}
+            {{ $destinations->links() }}
         </div>
     </div>
 @endsection

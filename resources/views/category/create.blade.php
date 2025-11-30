@@ -1,7 +1,6 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2>Tambah Kategori</h2>
-    </x-slot>
+@extends('layouts.app')
+@section('content')
+    <h2>Tambah Kategori</h2>
 
     <div class="card mt-4">
         <div class="card-body">
@@ -19,4 +18,4 @@
             </form>
         </div>
     </div>
-</x-app-layout>
+@endsection

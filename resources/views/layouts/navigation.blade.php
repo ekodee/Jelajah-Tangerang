@@ -26,6 +26,12 @@
                         Kategori
                     </x-nav-link>
                 </li>
+
+                <li class="nav-item">
+                    <x-nav-link :active="request()->routeIs('destinasi')" :href="route('destinasi.index')">
+                        Destinasi
+                    </x-nav-link>
+                </li>
             </ul>
 
             <!-- Right Side -->
