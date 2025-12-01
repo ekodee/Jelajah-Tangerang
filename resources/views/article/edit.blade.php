@@ -1,5 +1,14 @@
 @extends('layouts.app')
 
+@push('styles')
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <style>
+        .note-editor .note-toolbar {
+            background: #f8f9fa;
+        }
+    </style>
+@endpush
+
 @section('content')
     <div class="container-fluid p-0">
 
@@ -8,12 +17,11 @@
             <p class="text-muted">Perbarui konten artikel Jelajah Tangerang.</p>
         </div>
 
-        <form action="{{ route('artikel.update', $article->id) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('artikel.update', $artikel->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
             <div class="row">
-                <!-- Kolom Kiri: Konten Utama -->
                 <div class="col-12 col-lg-8">
                     <div class="card">
                         <div class="card-header">
@@ -24,7 +32,7 @@
                                 <label class="form-label">Judul Artikel</label>
                                 <input type="text" name="title"
                                     class="form-control form-control-lg @error('title') is-invalid @enderror"
-                                    value="{{ old('title', $article->title) }}" placeholder="Masukkan judul artikel...">
+                                    value="{{ old('title', $artikel->title) }}" placeholder="Masukkan judul artikel...">
                                 @error('title')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -32,8 +40,7 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Konten</label>
-                                <textarea name="content" rows="15" class="form-control @error('content') is-invalid @enderror"
-                                    placeholder="Tuliskan isi artikel disini...">{{ old('content', $article->content) }}</textarea>
+                                <textarea id="summernote" name="content" class="form-control @error('content') is-invalid @enderror">{{ old('content', $artikel->content) }}</textarea>
                                 @error('content')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -42,7 +49,6 @@
                     </div>
                 </div>
 
-                <!-- Kolom Kanan: Meta Data & Publish -->
                 <div class="col-12 col-lg-4">
                     <div class="card">
                         <div class="card-header">
@@ -51,9 +57,9 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 <label class="form-label">Thumbnail Saat Ini</label>
-                                @if ($article->thumbnail)
+                                @if ($artikel->thumbnail)
                                     <div class="mb-2">
-                                        <img src="{{ asset('storage/' . $article->thumbnail) }}"
+                                        <img src="{{ asset('storage/' . $artikel->thumbnail) }}"
                                             class="img-fluid rounded border" alt="Current Image"
                                             style="max-height: 200px; width: 100%; object-fit: cover;">
                                     </div>
@@ -77,7 +83,7 @@
                                 <label class="form-label">Jadwal Publish</label>
                                 <input type="datetime-local" name="published_at"
                                     class="form-control @error('published_at') is-invalid @enderror"
-                                    value="{{ old('published_at', $article->published_at) }}">
+                                    value="{{ old('published_at', $artikel->published_at) }}">
                                 @error('published_at')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -96,3 +102,54 @@
         </form>
     </div>
 @endsection
+
+@push('scripts')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#summernote').summernote({
+                placeholder: 'Tuliskan isi artikel disini...',
+                tabsize: 2,
+                height: 400,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ],
+                callbacks: {
+                    onImageUpload: function(files) {
+                        for (let i = 0; i < files.length; i++) {
+                            uploadImage(files[i]);
+                        }
+                    }
+                }
+            });
+
+            // Fungsi upload gambar yang sama dengan Create
+            function uploadImage(file) {
+                let data = new FormData();
+                data.append("file", file);
+                data.append("_token", "{{ csrf_token() }}");
+
+                $.ajax({
+                    url: "{{ route('artikel.upload_image') }}", // Route tetap sama
+                    method: "POST",
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        $('#summernote').summernote('insertImage', response.url);
+                    },
+                    error: function(xhr) {
+                        console.error(xhr.responseText);
+                        alert('Gagal mengupload gambar.');
+                    }
+                });
+            }
+        });
+    </script>
+@endpush

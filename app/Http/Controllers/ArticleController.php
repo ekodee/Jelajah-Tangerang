@@ -46,12 +46,12 @@ class ArticleController extends Controller
         return redirect()->route('artikel.index')->with('success', 'Artikel berhasil ditambahkan');
     }
 
-    public function edit(Article $article)
+    public function edit(Article $artikel)
     {
-        return view('article.edit', compact('article'));
+        return view('article.edit', compact('artikel'));
     }
 
-    public function update(Request $request, Article $article)
+    public function update(Request $request, Article $artikel)
     {
         $request->validate([
             'title'     => 'required|max:200',
@@ -68,13 +68,13 @@ class ArticleController extends Controller
         ];
 
         if ($request->hasFile('thumbnail')) {
-            if ($article->thumbnail && Storage::disk('public')->exists($article->thumbnail)) {
-                Storage::disk('public')->delete($article->thumbnail);
+            if ($artikel->thumbnail && Storage::disk('public')->exists($artikel->thumbnail)) {
+                Storage::disk('public')->delete($artikel->thumbnail);
             }
             $data['thumbnail'] = $request->file('thumbnail')->store('thumbnails', 'public');
         }
 
-        $article->update($data);
+        $artikel->update($data);
 
         return redirect()->route('artikel.index')->with('success', 'Artikel berhasil diperbarui');
     }
@@ -88,5 +88,27 @@ class ArticleController extends Controller
         $artikel->delete();
 
         return redirect()->route('artikel.index')->with('success', 'Artikel berhasil dihapus');
+    }
+
+    public function uploadImage(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+
+            // Validasi ekstensi
+            $validExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+            if (!in_array(strtolower($file->getClientOriginalExtension()), $validExtensions)) {
+                return response()->json(['error' => 'Format file tidak valid.'], 400);
+            }
+
+            // Simpan gambar ke storage/app/public/article-content
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('article-content', $filename, 'public');
+
+            // Kembalikan URL gambar agar bisa dibaca Summernote
+            return response()->json(['url' => asset('storage/' . $path)]);
+        }
+
+        return response()->json(['error' => 'Tidak ada file yang diunggah.'], 400);
     }
 }

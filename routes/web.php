@@ -15,15 +15,19 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::resource('kategori', CategoryController::class)->middleware(['auth', 'verified']);
-Route::resource('destinasi', DestinationController::class)->middleware(['auth', 'verified']);
-Route::resource('artikel', ArticleController::class)->middleware(['auth', 'verified']);
-Route::resource('review', ReviewController::class)->middleware(['auth', 'verified']);
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::post('artikel/upload-image', [ArticleController::class, 'uploadImage'])->name('artikel.upload_image');
+
+    Route::resource('kategori', CategoryController::class);
+    Route::resource('destinasi', DestinationController::class);
+    Route::resource('artikel', ArticleController::class);
+    Route::resource('review', ReviewController::class);
 });
 
 require __DIR__ . '/auth.php';
