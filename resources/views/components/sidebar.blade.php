@@ -38,7 +38,7 @@
                 Review
             </li>
             <li class="sidebar-item">
-                <a class="sidebar-link" href="{{ route('artikel.index') }}">
+                <a class="sidebar-link" href="{{ route('review.index') }}">
                     <i class="align-middle" data-feather="message-square"></i> <span class="align-middle">Reviews</span>
                 </a>
             </li>

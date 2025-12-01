@@ -2,63 +2,69 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Review;
+use App\Models\Destination;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $reviews = Review::with(['user', 'destination'])->latest()->paginate(10);
+        return view('review.index', compact('reviews'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $destinations = Destination::all();
+        return view('review.create', compact('destinations'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'destination_id' => 'required|exists:destinations,id',
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'required|string',
+        ]);
+
+        Review::create([
+            'user_id' => Auth::id(),
+            'destination_id' => $request->destination_id,
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+        ]);
+
+        return redirect()->route('review.index')->with('success', 'Review berhasil ditambahkan');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(Review $review)
     {
-        //
+        $destinations = Destination::all();
+        return view('review.edit', compact('review', 'destinations'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, Review $review)
     {
-        //
+        $request->validate([
+            'destination_id' => 'required|exists:destinations,id',
+            'rating' => 'required|integer|min:1|max:5',
+            'comment' => 'required|string',
+        ]);
+
+        $review->update([
+            'destination_id' => $request->destination_id,
+            'rating' => $request->rating,
+            'comment' => $request->comment,
+        ]);
+
+        return redirect()->route('review.index')->with('success', 'Review berhasil diperbarui');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(Review $review)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $review->delete();
+        return redirect()->route('review.index')->with('success', 'Review berhasil dihapus');
     }
 }
