@@ -1,8 +1,7 @@
-import React from "react"; // Pastikan React diimport
-import { ArrowRight, Calendar } from "lucide-react";
-import { Link } from "react-router-dom"; // 1. Import Link
+import React from "react";
+import { ArrowRight, Calendar, MapPin } from "lucide-react"; // Tambahkan MapPin jika ingin ikon lokasi
+import { Link } from "react-router-dom";
 
-// 2. Tambahkan 'id' ke dalam props
 const Card = ({
   id,
   image,
@@ -44,33 +43,25 @@ const Card = ({
             {subtitle}
           </p>
         ) : (
-          <p className="text-primary font-medium text-sm mb-4 grow">
-            {subtitle}
-          </p>
+          <div className="text-primary font-medium text-sm mb-4 grow flex items-center gap-1">
+            {/* Opsional: Tambah ikon lokasi biar lebih cantik */}
+            <MapPin size={14} />
+            {subtitle || "Kota Tangerang"}
+          </div>
         )}
 
         <div className="pt-4 border-t border-gray-50 dark:border-gray-700 mt-auto">
-          {/* 3. Logika Percabangan: Jika tipe article, gunakan Link. Jika bukan, gunakan button biasa */}
-          {type === "article" ? (
-            <Link
-              to={`/artikel/${id}`}
-              className="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white group-hover:text-primary transition-colors"
-            >
-              Baca Artikel
-              <ArrowRight
-                size={16}
-                className="transition-transform group-hover:translate-x-1"
-              />
-            </Link>
-          ) : (
-            <button className="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
-              Lihat Lokasi
-              <ArrowRight
-                size={16}
-                className="transition-transform group-hover:translate-x-1"
-              />
-            </button>
-          )}
+          {/* UBAH DISINI: Menggunakan Link untuk KEDUA tipe */}
+          <Link
+            to={type === "article" ? `/artikel/${id}` : `/destinasi/${id}`}
+            className="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white group-hover:text-primary transition-colors"
+          >
+            {type === "article" ? "Baca Artikel" : "Lihat Detail"}
+            <ArrowRight
+              size={16}
+              className="transition-transform group-hover:translate-x-1"
+            />
+          </Link>
         </div>
       </div>
     </div>
