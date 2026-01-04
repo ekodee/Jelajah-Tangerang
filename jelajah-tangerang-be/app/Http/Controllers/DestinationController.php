@@ -1,0 +1,90 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Category;
+use App\Models\Destination;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+
+class DestinationController extends Controller
+{
+    public function index()
+    {
+        $destinations = Destination::with('category')->latest()->paginate(10);
+        return view('destination.index', compact('destinations'));
+    }
+
+    public function create()
+    {
+        $categories = Category::all();
+        return view('destination.create', compact('categories'));
+    }
+
+    public function store(Request $request)
+    {
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'name' => 'required|max:150|unique:destinations,name',
+            'description' => 'required',
+            'address' => 'required',
+            'open_hours' => 'required|max:100',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'photo' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        $photoPath = $request->file('photo')->store('destinations', 'public');
+
+        Destination::create([
+            'category_id' => $request->category_id,
+            'name' => $request->name,
+            'slug' => Str::slug($request->name),
+            'description' => $request->description,
+            'address' => $request->address,
+            'open_hours' => $request->open_hours,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'photo' => $photoPath,
+        ]);
+
+        return redirect()->route('destinasi.index')->with('success', 'Destinasi berhasil ditambahkan');
+    }
+
+    public function edit(Destination $destinasi)
+    {
+        $categories = Category::all();
+        return view('destination.edit', compact('destinasi', 'categories'));
+    }
+
+    public function update(Request $request, Destination $destinasi)
+    {
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'name' => 'required|max:150|unique:destinations,name,' . $destinasi->id,
+            'description' => 'required',
+            'address' => 'required',
+            'open_hours' => 'required|max:100',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        $data = $request->all();
+        $data['slug'] = Str::slug($request->name);
+
+        if ($request->hasFile('photo')) {
+            $data['photo'] = $request->file('photo')->store('destinations', 'public');
+        }
+
+        $destinasi->update($data);
+
+        return redirect()->route('destinasi.index')->with('success', 'Destinasi berhasil diperbarui');
+    }
+
+    public function destroy(Destination $destinasi)
+    {
+        $destinasi->delete();
+        return redirect()->route('destinasi.index')->with('success', 'Destinasi berhasil dihapus');
+    }
+}
