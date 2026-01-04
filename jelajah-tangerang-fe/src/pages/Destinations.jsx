@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import InteractiveMap from "../components/InteractiveMap"; // Import Peta
 import { destinations } from "../data/mockData";
 import { MapPin, Search, Compass, Map as MapIcon, Grid } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Destinations = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -127,9 +128,11 @@ const Destinations = () => {
           {filteredDestinations.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {filteredDestinations.map((item) => (
-                <div
+                /* UBAH DARI DIV KE LINK */
+                <Link
+                  to={`/destinasi/${item.id}`} // Arahkan ke URL detail berdasarkan ID
                   key={item.id}
-                  className="group relative h-[350px] rounded-3xl overflow-hidden cursor-pointer shadow-sm border border-gray-100 dark:border-gray-800"
+                  className="group relative h-[350px] rounded-3xl overflow-hidden cursor-pointer shadow-sm border border-gray-100 dark:border-gray-800 block" // Tambahkan 'block' agar layout aman
                 >
                   {/* Gambar */}
                   <img
@@ -153,7 +156,7 @@ const Destinations = () => {
                       </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           ) : (

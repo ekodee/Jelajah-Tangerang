@@ -136,6 +136,92 @@ const ArticleDetail = () => {
                   <Share2 size={18} /> Bagikan
                 </button>
               </div>
+
+              <div className="mt-12 pt-10 border-t border-gray-100 dark:border-gray-800">
+                <h3 className="text-xl font-bold mb-6 text-gray-900 dark:text-white">
+                  Diskusi Pembaca (2)
+                </h3>
+
+                {/* Form Komentar */}
+                <div className="flex gap-4 mb-10">
+                  <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden shrink-0">
+                    <img
+                      src="https://ui-avatars.com/api/?name=Guest&background=random"
+                      alt="Guest"
+                    />
+                  </div>
+                  <div className="flex-grow">
+                    <textarea
+                      placeholder="Tulis tanggapan Anda..."
+                      className="w-full p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-primary/50 min-h-[100px] text-gray-900 dark:text-white placeholder-gray-400"
+                    ></textarea>
+                    <div className="mt-2 flex justify-end">
+                      <button className="px-6 py-2 bg-primary text-white font-bold rounded-lg hover:bg-blue-700 transition shadow-lg shadow-blue-500/20">
+                        Kirim Komentar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* List Komentar Dummy */}
+                <div className="space-y-8">
+                  {/* Komentar 1 */}
+                  <div className="flex gap-4">
+                    <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden shrink-0">
+                      <img
+                        src="https://ui-avatars.com/api/?name=Andi+P&background=random"
+                        alt="User"
+                      />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-bold text-gray-900 dark:text-white">
+                          Andi Pratama
+                        </span>
+                        <span className="text-xs text-gray-400">
+                          • 2 jam yang lalu
+                        </span>
+                      </div>
+                      <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                        Wah, baru tau kalau tempat ini sudah buka lagi. Terakhir
+                        kesana masih renovasi. Wajib masuk list weekend ini nih!
+                        👍
+                      </p>
+                      <button className="text-xs text-primary font-semibold mt-2 hover:underline">
+                        Balas
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Komentar 2 */}
+                  <div className="flex gap-4">
+                    <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden shrink-0">
+                      <img
+                        src="https://ui-avatars.com/api/?name=Siti+N&background=random"
+                        alt="User"
+                      />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="font-bold text-gray-900 dark:text-white">
+                          Siti Nurhaliza
+                        </span>
+                        <span className="text-xs text-gray-400">
+                          • 5 jam yang lalu
+                        </span>
+                      </div>
+                      <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                        Artikelnya sangat informatif. Min, tolong bahas juga
+                        tentang akses transportasi umum menuju ke sana dong,
+                        biar yang gak bawa kendaraan pribadi gampang aksesnya.
+                      </p>
+                      <button className="text-xs text-primary font-semibold mt-2 hover:underline">
+                        Balas
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* === SIDEBAR (Widget Portal Berita) === */}
