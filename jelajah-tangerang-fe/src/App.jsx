@@ -17,11 +17,11 @@ function App() {
 
         {/* Routes Artikel */}
         <Route path="/artikel" element={<Articles />} />
-        <Route path="/artikel/:id" element={<ArticleDetail />} />
+        <Route path="/artikel/:slug" element={<ArticleDetail />} />
 
         {/* Route Destinasi */}
         <Route path="/destinasi" element={<Destinations />} />
-        <Route path="/destinasi/:id" element={<DestinationDetail />} />
+        <Route path="/destinasi/:slug" element={<DestinationDetail />} />
 
         {/* Route Tentang */}
         <Route path="/tentang" element={<About />} />
