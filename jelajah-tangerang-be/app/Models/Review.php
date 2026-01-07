@@ -16,6 +16,11 @@ class Review extends Model
         return $this->belongsTo(Destination::class);
     }
 
+    public function article()
+    {
+        return $this->belongsTo(Article::class);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

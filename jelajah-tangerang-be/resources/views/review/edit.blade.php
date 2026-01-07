@@ -2,7 +2,6 @@
 
 @section('content')
     <div class="container-fluid p-0">
-
         <div class="mb-3">
             <h1 class="h3 d-inline align-middle">Edit Review</h1>
         </div>
@@ -18,27 +17,42 @@
                             @csrf
                             @method('PUT')
 
-                            <div class="mb-3">
-                                <label class="form-label">Pilih Destinasi</label>
-                                <select name="destination_id"
-                                    class="form-select @error('destination_id') is-invalid @enderror">
-                                    <option value="" disabled>-- Cari Destinasi --</option>
-                                    @foreach ($destinations as $destination)
-                                        <option value="{{ $destination->id }}"
-                                            {{ old('destination_id', $review->destination_id) == $destination->id ? 'selected' : '' }}>
-                                            {{ $destination->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('destination_id')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                            <div class="alert alert-info py-2 mb-3">
+                                <small>Edit target review jika diperlukan (Pilih salah satu).</small>
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Berikan Rating</label>
+                                <label class="form-label">Destinasi</label>
+                                <select name="destination_id"
+                                    class="form-select @error('destination_id') is-invalid @enderror">
+                                    <option value="">-- Tidak Dipilih --</option>
+                                    @foreach ($destinations as $dest)
+                                        <option value="{{ $dest->id }}"
+                                            {{ old('destination_id', $review->destination_id) == $dest->id ? 'selected' : '' }}>
+                                            {{ $dest->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Artikel</label>
+                                <select name="article_id" class="form-select @error('article_id') is-invalid @enderror">
+                                    <option value="">-- Tidak Dipilih --</option>
+                                    @foreach ($articles as $art)
+                                        <option value="{{ $art->id }}"
+                                            {{ old('article_id', $review->article_id) == $art->id ? 'selected' : '' }}>
+                                            {{ $art->title }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <hr>
+
+                            <div class="mb-3">
+                                <label class="form-label">Rating</label>
                                 <select name="rating" class="form-select @error('rating') is-invalid @enderror">
-                                    <option value="" disabled>-- Pilih Bintang --</option>
                                     @for ($i = 5; $i >= 1; $i--)
                                         <option value="{{ $i }}"
                                             {{ old('rating', $review->rating) == $i ? 'selected' : '' }}>
@@ -46,17 +60,11 @@
                                         </option>
                                     @endfor
                                 </select>
-                                @error('rating')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
                             </div>
 
                             <div class="mb-4">
-                                <label class="form-label">Komentar Pengunjung</label>
-                                <textarea name="comment" rows="5" class="form-control @error('comment') is-invalid @enderror">{{ old('comment', $review->comment) }}</textarea>
-                                @error('comment')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                <label class="form-label">Komentar</label>
+                                <textarea name="comment" rows="4" class="form-control @error('comment') is-invalid @enderror">{{ old('comment', $review->comment) }}</textarea>
                             </div>
 
                             <div class="d-flex justify-content-between">
