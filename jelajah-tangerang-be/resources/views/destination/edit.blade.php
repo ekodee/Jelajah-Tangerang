@@ -12,13 +12,13 @@
             @method('PUT')
 
             <div class="row">
-                <!-- Kolom Kiri: Info Utama & Lokasi -->
                 <div class="col-12 col-lg-8">
                     <div class="card mb-4">
                         <div class="card-header">
                             <h5 class="card-title mb-0">Informasi Umum</h5>
                         </div>
                         <div class="card-body">
+                            {{-- BAGIAN INPUT TEXT TETAP SAMA (Name, Category, Description) --}}
                             <div class="row">
                                 <div class="col-md-8 mb-3">
                                     <label class="form-label">Nama Destinasi</label>
@@ -62,6 +62,7 @@
                             <h5 class="card-title mb-0">Lokasi & Peta</h5>
                         </div>
                         <div class="card-body">
+                            {{-- BAGIAN LOKASI TETAP SAMA --}}
                             <div class="mb-3">
                                 <label class="form-label">Alamat Lengkap</label>
                                 <textarea name="address" rows="2" class="form-control @error('address') is-invalid @enderror">{{ old('address', $destinasi->address) }}</textarea>
@@ -93,7 +94,6 @@
                     </div>
                 </div>
 
-                <!-- Kolom Kanan: Media & Jam Operasional -->
                 <div class="col-12 col-lg-4">
                     <div class="card">
                         <div class="card-header">
@@ -104,9 +104,15 @@
                                 <label class="form-label">Foto Saat Ini</label>
                                 @if ($destinasi->photo)
                                     <div class="mb-2">
-                                        <img src="{{ asset('storage/' . $destinasi->photo) }}"
-                                            class="img-fluid rounded border" alt="Foto Destinasi"
-                                            style="max-height: 200px; width: 100%; object-fit: cover;">
+                                        {{-- LOGIC PERBAIKAN DI SINI --}}
+                                        @php
+                                            $imageSrc = Str::startsWith($destinasi->photo, 'http')
+                                                ? $destinasi->photo
+                                                : asset('storage/' . $destinasi->photo);
+                                        @endphp
+
+                                        <img src="{{ $imageSrc }}" class="img-fluid rounded border"
+                                            alt="Foto Destinasi" style="max-height: 200px; width: 100%; object-fit: cover;">
                                     </div>
                                 @else
                                     <div class="alert alert-secondary py-2">Belum ada foto.</div>

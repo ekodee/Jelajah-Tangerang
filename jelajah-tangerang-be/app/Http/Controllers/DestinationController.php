@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Destination;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class DestinationController extends Controller
 {
@@ -25,27 +26,27 @@ class DestinationController extends Controller
     {
         $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'name' => 'required|max:150|unique:destinations,name',
+            'name'        => 'required|max:150|unique:destinations,name',
             'description' => 'required',
-            'address' => 'required',
-            'open_hours' => 'required|max:100',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-            'photo' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'address'     => 'required',
+            'open_hours'  => 'required|max:100',
+            'latitude'    => 'required|numeric',
+            'longitude'   => 'required|numeric',
+            'photo'       => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $photoPath = $request->file('photo')->store('destinations', 'public');
 
         Destination::create([
             'category_id' => $request->category_id,
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
+            'name'        => $request->name,
+            'slug'        => Str::slug($request->name),
             'description' => $request->description,
-            'address' => $request->address,
-            'open_hours' => $request->open_hours,
-            'latitude' => $request->latitude,
-            'longitude' => $request->longitude,
-            'photo' => $photoPath,
+            'address'     => $request->address,
+            'open_hours'  => $request->open_hours,
+            'latitude'    => $request->latitude,
+            'longitude'   => $request->longitude,
+            'photo'       => $photoPath,
         ]);
 
         return redirect()->route('destinasi.index')->with('success', 'Destinasi berhasil ditambahkan');
@@ -61,19 +62,24 @@ class DestinationController extends Controller
     {
         $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'name' => 'required|max:150|unique:destinations,name,' . $destinasi->id,
+            'name'        => 'required|max:150|unique:destinations,name,' . $destinasi->id,
             'description' => 'required',
-            'address' => 'required',
-            'open_hours' => 'required|max:100',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'address'     => 'required',
+            'open_hours'  => 'required|max:100',
+            'latitude'    => 'required|numeric',
+            'longitude'   => 'required|numeric',
+            'photo'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $data = $request->all();
+        $data = $request->except(['photo', '_token', '_method']);
         $data['slug'] = Str::slug($request->name);
 
         if ($request->hasFile('photo')) {
+            if ($destinasi->photo && !Str::startsWith($destinasi->photo, 'http')) {
+                if (Storage::disk('public')->exists($destinasi->photo)) {
+                    Storage::disk('public')->delete($destinasi->photo);
+                }
+            }
             $data['photo'] = $request->file('photo')->store('destinations', 'public');
         }
 
@@ -84,6 +90,12 @@ class DestinationController extends Controller
 
     public function destroy(Destination $destinasi)
     {
+        if ($destinasi->photo && !Str::startsWith($destinasi->photo, 'http')) {
+            if (Storage::disk('public')->exists($destinasi->photo)) {
+                Storage::disk('public')->delete($destinasi->photo);
+            }
+        }
+
         $destinasi->delete();
         return redirect()->route('destinasi.index')->with('success', 'Destinasi berhasil dihapus');
     }
