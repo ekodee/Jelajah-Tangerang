@@ -38,6 +38,22 @@
                             </div>
 
                             <div class="mb-3">
+                                <label class="form-label">Kategori</label>
+                                <select name="category_id" class="form-select @error('category_id') is-invalid @enderror">
+                                    <option value="" selected disabled>-- Pilih Kategori --</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}"
+                                            {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                            </button>
+                                    @endforeach
+                                </select>
+                                @error('category_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
                                 <label class="form-label">Konten</label>
                                 <textarea id="summernote" name="content" class="form-control @error('content') is-invalid @enderror">{{ old('content') }}</textarea>
                                 @error('content')

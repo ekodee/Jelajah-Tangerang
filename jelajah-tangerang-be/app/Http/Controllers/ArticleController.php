@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -12,32 +13,35 @@ class ArticleController extends Controller
 {
     public function index()
     {
-        // Mengambil data artikel terbaru + pagination
-        $articles = Article::with('user')->latest()->paginate(10);
+        $articles = Article::with(['user', 'category'])->latest()->paginate(10);
         return view('article.index', compact('articles'));
     }
 
     public function create()
     {
-        return view('article.create');
+        // Ambil data kategori untuk dropdown
+        $categories = Category::all();
+        return view('article.create', compact('categories'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'title'     => 'required|max:200',
-            'content'   => 'required',
-            'thumbnail' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'title'       => 'required|max:200',
+            'category_id' => 'required|exists:categories,id',
+            'content'     => 'required',
+            'thumbnail'   => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'published_at' => 'nullable|date',
         ]);
 
-        // Upload Thumbnail
         $thumbnailPath = $request->file('thumbnail')->store('thumbnails', 'public');
 
         Article::create([
-            'user_id'      => Auth::id(), // Mengambil ID user yang login
+            'user_id'      => Auth::id(),
+            // SIMPAN ID KATEGORI
+            'category_id'  => $request->category_id,
             'title'        => $request->title,
-            'slug'         => Str::slug($request->title), // Generate slug otomatis
+            'slug'         => Str::slug($request->title),
             'content'      => $request->content,
             'thumbnail'    => $thumbnailPath,
             'published_at' => $request->published_at,
@@ -48,19 +52,22 @@ class ArticleController extends Controller
 
     public function edit(Article $artikel)
     {
-        return view('article.edit', compact('artikel'));
+        $categories = Category::all();
+        return view('article.edit', compact('artikel', 'categories'));
     }
 
     public function update(Request $request, Article $artikel)
     {
         $request->validate([
-            'title'     => 'required|max:200',
-            'content'   => 'required',
-            'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'title'       => 'required|max:200',
+            'category_id' => 'required|exists:categories,id',
+            'content'     => 'required',
+            'thumbnail'   => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'published_at' => 'nullable|date',
         ]);
 
         $data = [
+            'category_id'  => $request->category_id,
             'title'        => $request->title,
             'slug'         => Str::slug($request->title),
             'content'      => $request->content,
@@ -68,9 +75,12 @@ class ArticleController extends Controller
         ];
 
         if ($request->hasFile('thumbnail')) {
-            if ($artikel->thumbnail && Storage::disk('public')->exists($artikel->thumbnail)) {
-                Storage::disk('public')->delete($artikel->thumbnail);
+            if ($artikel->thumbnail && !Str::startsWith($artikel->thumbnail, 'http')) {
+                if (Storage::disk('public')->exists($artikel->thumbnail)) {
+                    Storage::disk('public')->delete($artikel->thumbnail);
+                }
             }
+
             $data['thumbnail'] = $request->file('thumbnail')->store('thumbnails', 'public');
         }
 
@@ -81,8 +91,10 @@ class ArticleController extends Controller
 
     public function destroy(Article $artikel)
     {
-        if ($artikel->thumbnail && Storage::disk('public')->exists($artikel->thumbnail)) {
-            Storage::disk('public')->delete($artikel->thumbnail);
+        if ($artikel->thumbnail && !Str::startsWith($artikel->thumbnail, 'http')) {
+            if (Storage::disk('public')->exists($artikel->thumbnail)) {
+                Storage::disk('public')->delete($artikel->thumbnail);
+            }
         }
 
         $artikel->delete();
@@ -94,18 +106,15 @@ class ArticleController extends Controller
     {
         if ($request->hasFile('file')) {
             $file = $request->file('file');
-
-            // Validasi ekstensi
             $validExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+
             if (!in_array(strtolower($file->getClientOriginalExtension()), $validExtensions)) {
                 return response()->json(['error' => 'Format file tidak valid.'], 400);
             }
 
-            // Simpan gambar ke storage/app/public/article-content
             $filename = time() . '_' . $file->getClientOriginalName();
             $path = $file->storeAs('article-content', $filename, 'public');
 
-            // Kembalikan URL gambar agar bisa dibaca Summernote
             return response()->json(['url' => asset('storage/' . $path)]);
         }
 
