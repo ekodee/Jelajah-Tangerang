@@ -11,7 +11,6 @@ class ArticleController extends Controller
 {
     public function index()
     {
-        // Load relasi User dan Category
         $articles = Article::with(['user', 'category'])->latest()->get();
 
         $data = $articles->map(function ($article) {
@@ -19,7 +18,11 @@ class ArticleController extends Controller
                 'id'          => $article->id,
                 'title'       => $article->title,
                 'summary'     => Str::limit(strip_tags($article->content), 150),
-                'image'       => asset('storage/' . $article->thumbnail),
+
+                'image'       => Str::startsWith($article->thumbnail, 'http')
+                    ? $article->thumbnail
+                    : asset('storage/' . $article->thumbnail),
+
                 'category'    => $article->category->name ?? 'Umum',
                 'date'        => $article->created_at->format('d M Y'),
                 'author'      => $article->user->name ?? 'Admin',
@@ -41,11 +44,15 @@ class ArticleController extends Controller
             'id'          => $article->id,
             'title'       => $article->title,
             'summary'     => Str::limit(strip_tags($article->content), 150),
-            'image'       => asset('storage/' . $article->thumbnail),
+
+            'image'       => Str::startsWith($article->thumbnail, 'http')
+                ? $article->thumbnail
+                : asset('storage/' . $article->thumbnail),
+
             'category'    => $article->category->name ?? 'Umum',
             'date'        => $article->created_at->format('d M Y'),
             'author'      => $article->user->name ?? 'Admin',
-            'fullContent' => $article->content, 
+            'fullContent' => $article->content,
         ]);
     }
 }

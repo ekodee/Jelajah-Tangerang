@@ -39,6 +39,22 @@
                             </div>
 
                             <div class="mb-3">
+                                <label class="form-label">Kategori</label>
+                                <select name="category_id" class="form-select @error('category_id') is-invalid @enderror">
+                                    <option value="" disabled>-- Pilih Kategori --</option>
+                                    @foreach ($categories as $category)
+                                        <option value="{{ $category->id }}"
+                                            {{ old('category_id', $artikel->category_id) == $category->id ? 'selected' : '' }}>
+                                            {{ $category->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('category_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
                                 <label class="form-label">Konten</label>
                                 <textarea id="summernote" name="content" class="form-control @error('content') is-invalid @enderror">{{ old('content', $artikel->content) }}</textarea>
                                 @error('content')
@@ -59,13 +75,18 @@
                                 <label class="form-label">Thumbnail Saat Ini</label>
                                 @if ($artikel->thumbnail)
                                     <div class="mb-2">
-                                        <img src="{{ asset('storage/' . $artikel->thumbnail) }}"
-                                            class="img-fluid rounded border" alt="Current Image"
+                                        {{-- LOGIC BARU: Cek apakah URL http atau path lokal --}}
+                                        @php
+                                            $imageSrc = Str::startsWith($artikel->thumbnail, 'http')
+                                                ? $artikel->thumbnail
+                                                : asset('storage/' . $artikel->thumbnail);
+                                        @endphp
+
+                                        <img src="{{ $imageSrc }}" class="img-fluid rounded border" alt="Current Image"
                                             style="max-height: 200px; width: 100%; object-fit: cover;">
                                     </div>
                                 @else
-                                    <div class="alert alert-secondary py-2">Belum ada thumbnail.</div>
-                                @endif
+                                    ...
                             </div>
 
                             <div class="mb-3">
