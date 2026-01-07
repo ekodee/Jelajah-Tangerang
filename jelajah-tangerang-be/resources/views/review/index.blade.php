@@ -23,14 +23,14 @@
 
         <div class="card flex-fill">
             <div class="card-header">
-                <h5 class="card-title mb-0">Ulasan Pengunjung</h5>
+                <h5 class="card-title mb-0">Daftar Ulasan Masuk</h5>
             </div>
             <div class="table-responsive">
                 <table class="table table-hover my-0">
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Destinasi</th>
+                            <th>Target Review</th>
                             <th>Reviewer</th>
                             <th>Rating</th>
                             <th class="d-none d-md-table-cell">Komentar</th>
@@ -41,28 +41,30 @@
                         @forelse($reviews as $review)
                             <tr>
                                 <td class="align-middle">{{ $loop->iteration }}</td>
-                                <td class="align-middle fw-bold">{{ $review->destination->name ?? '-' }}</td>
+                                <td class="align-middle">
+                                    {{-- LOGIKA HYBRID --}}
+                                    @if($review->article_id)
+                                        <span class="badge bg-info">Artikel</span><br>
+                                        <small class="fw-bold">{{ Str::limit($review->article->title ?? 'Artikel Dihapus', 30) }}</small>
+                                    @elseif($review->destination_id)
+                                        <span class="badge bg-success">Destinasi</span><br>
+                                        <small class="fw-bold">{{ $review->destination->name ?? 'Destinasi Dihapus' }}</small>
+                                    @else
+                                        <span class="badge bg-secondary">Target Tidak Ada</span>
+                                    @endif
+                                </td>
                                 <td class="align-middle">
                                     <div class="d-flex align-items-center">
-                                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-2"
-                                            style="width: 32px; height: 32px;">
-                                            <i class="text-secondary" data-feather="user" width="16"></i>
-                                        </div>
+                                        <i class="align-middle me-2" data-feather="user"></i>
                                         <span>{{ $review->user->name ?? 'Guest' }}</span>
                                     </div>
                                 </td>
                                 <td class="align-middle">
                                     @php
-                                        $badgeClass =
-                                            $review->rating >= 4
-                                                ? 'bg-success'
-                                                : ($review->rating >= 3
-                                                    ? 'bg-warning'
-                                                    : 'bg-danger');
+                                        $bg = $review->rating >= 4 ? 'bg-success' : ($review->rating == 3 ? 'bg-warning' : 'bg-danger');
                                     @endphp
-                                    <span class="badge {{ $badgeClass }}">
-                                        {{ $review->rating }} <i class="align-middle mb-1" data-feather="star"
-                                            width="12" height="12"></i>
+                                    <span class="badge {{ $bg }}">
+                                        {{ $review->rating }} <i class="align-middle mb-1" data-feather="star" width="12" height="12"></i>
                                     </span>
                                 </td>
                                 <td class="d-none d-md-table-cell align-middle text-muted">
@@ -87,9 +89,7 @@
                         @empty
                             <tr>
                                 <td colspan="6" class="text-center py-5">
-                                    <i class="text-muted" data-feather="message-circle"
-                                        style="width: 48px; height: 48px;"></i>
-                                    <p class="mt-2 mb-0">Belum ada review masuk.</p>
+                                    <p class="mb-0 text-muted">Belum ada data ulasan.</p>
                                 </td>
                             </tr>
                         @endforelse
