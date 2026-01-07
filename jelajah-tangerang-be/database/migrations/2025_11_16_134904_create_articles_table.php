@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('slug', 200);
             $table->text('content');
             $table->string('thumbnail');
+            $table->foreignId('category_id')->nullable()->constrained()->onDelete('set null');
             $table->dateTime('published_at')->nullable();
             $table->timestamps();
         });

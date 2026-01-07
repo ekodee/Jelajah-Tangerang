@@ -2,7 +2,6 @@ import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
-  // Jangan render jika halamannya cuma 1
   if (totalPages <= 1) return null;
 
   return (
@@ -15,7 +14,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         <ChevronLeft size={20} />
       </button>
 
-      {/* Loop sederhana untuk nomor halaman */}
       {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
         <button
           key={page}

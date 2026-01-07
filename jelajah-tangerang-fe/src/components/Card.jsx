@@ -44,14 +44,12 @@ const Card = ({
           </p>
         ) : (
           <div className="text-primary font-medium text-sm mb-4 grow flex items-center gap-1">
-            {/* Opsional: Tambah ikon lokasi biar lebih cantik */}
             <MapPin size={14} />
             {subtitle || "Kota Tangerang"}
           </div>
         )}
 
         <div className="pt-4 border-t border-gray-50 dark:border-gray-700 mt-auto">
-          {/* UBAH DISINI: Menggunakan Link untuk KEDUA tipe */}
           <Link
             to={type === "article" ? `/artikel/${id}` : `/destinasi/${id}`}
             className="flex items-center gap-2 text-sm font-semibold text-gray-900 dark:text-white group-hover:text-primary transition-colors"

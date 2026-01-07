@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import { Menu, Moon, Sun, Search, Bell } from "lucide-react"; // Tambah Icon Search & Bell
+import { Menu, Moon, Sun, Search, Bell } from "lucide-react";
 import Button from "./Button";
 
 const Navbar = ({ toggleSidebar }) => {
@@ -8,19 +8,16 @@ const Navbar = ({ toggleSidebar }) => {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
 
-  // Deteksi scroll untuk efek glassmorphism
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Toggle Dark Mode
   useEffect(() => {
     document.documentElement.classList.toggle("dark", isDark);
   }, [isDark]);
 
-  // Helper untuk class active link
   const navLinkClass = ({ isActive }) =>
     `text-sm font-semibold transition-all duration-300 relative group ${
       isActive
@@ -37,7 +34,6 @@ const Navbar = ({ toggleSidebar }) => {
       } dark:text-white`}
     >
       <div className="container mx-auto px-4 flex justify-between items-center">
-        {/* === KIRI: Logo & Mobile Toggle === */}
         <div className="flex items-center gap-3">
           <button
             onClick={toggleSidebar}
@@ -54,8 +50,6 @@ const Navbar = ({ toggleSidebar }) => {
           </Link>
         </div>
 
-        {/* === TENGAH: Menu Navigasi (Desktop) === */}
-        {/* Menggunakan NavLink untuk UX Active State yang lebih baik */}
         <div className="hidden lg:flex items-center gap-8">
           {[
             { path: "/", label: "Beranda" },
@@ -67,7 +61,6 @@ const Navbar = ({ toggleSidebar }) => {
               {({ isActive }) => (
                 <>
                   {link.label}
-                  {/* Indikator Titik di bawah menu aktif */}
                   <span
                     className={`absolute -bottom-1 left-1/2 w-1 h-1 bg-primary rounded-full transform -translate-x-1/2 transition-all duration-300 ${
                       isActive
@@ -81,17 +74,13 @@ const Navbar = ({ toggleSidebar }) => {
           ))}
         </div>
 
-        {/* === KANAN: Actions (Search, Notif, Theme, Login) === */}
         <div className="flex items-center gap-1 sm:gap-3">
-          {/* Search Icon (UX: Penting untuk Portal Berita) */}
           <button className="p-2 rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors">
             <Search size={20} />
           </button>
 
-          {/* Divider Kecil */}
           <div className="h-6 w-px bg-gray-200 dark:bg-gray-700 mx-1 hidden sm:block"></div>
 
-          {/* Theme Toggle */}
           <button
             onClick={() => setIsDark(!isDark)}
             className="p-2 rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors"
@@ -104,7 +93,6 @@ const Navbar = ({ toggleSidebar }) => {
             )}
           </button>
 
-          {/* Login / Subscribe Button */}
           <div className="hidden sm:block ml-2">
             <Button
               variant="primary"
