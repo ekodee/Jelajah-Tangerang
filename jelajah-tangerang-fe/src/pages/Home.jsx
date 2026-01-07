@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
-import NewsTicker from "../components/NewsTicker"; // Import Ticker
+import NewsTicker from "../components/NewsTicker";
 import Card from "../components/Card";
 import Button from "../components/Button";
 import Footer from "../components/Footer";

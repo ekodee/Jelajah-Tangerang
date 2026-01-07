@@ -4,7 +4,6 @@ import { X } from "lucide-react";
 const Sidebar = ({ isOpen, onClose, categories }) => {
   return (
     <>
-      {/* Overlay Hitam (Hanya Mobile) */}
       <div
         className={`fixed inset-0 bg-black/50 z-40 lg:hidden transition-opacity duration-300 ${
           isOpen ? "opacity-100 visible" : "opacity-0 invisible"
@@ -12,7 +11,6 @@ const Sidebar = ({ isOpen, onClose, categories }) => {
         onClick={onClose}
       />
 
-      {/* Sidebar Container */}
       <aside
         className={`
         fixed lg:sticky top-0 lg:top-24 left-0 h-full lg:h-[calc(100vh-8rem)] 
@@ -22,7 +20,6 @@ const Sidebar = ({ isOpen, onClose, categories }) => {
         ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
       `}
       >
-        {/* Header Mobile */}
         <div className="flex justify-between items-center lg:hidden mb-8">
           <span className="text-lg font-bold">Menu</span>
           <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded">
@@ -30,7 +27,6 @@ const Sidebar = ({ isOpen, onClose, categories }) => {
           </button>
         </div>
 
-        {/* Isi Sidebar */}
         <div>
           <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">
             Kategori
@@ -49,7 +45,6 @@ const Sidebar = ({ isOpen, onClose, categories }) => {
           </ul>
         </div>
 
-        {/* Banner Promo Kecil di Sidebar (Opsional) */}
         <div className="mt-10 p-4 bg-blue-50 dark:bg-gray-700 rounded-xl">
           <p className="text-xs text-primary dark:text-blue-300 font-bold mb-1">
             Event Minggu Ini

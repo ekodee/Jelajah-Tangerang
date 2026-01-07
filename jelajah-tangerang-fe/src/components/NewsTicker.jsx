@@ -4,13 +4,11 @@ const NewsTicker = () => {
   return (
     <div className="bg-primary text-white text-xs md:text-sm py-2 overflow-hidden relative z-50 border-b border-blue-600">
       <div className="container mx-auto px-4 flex items-center">
-        {/* Label Statis */}
         <span className="font-bold bg-primary z-10 pr-4 shrink-0 uppercase tracking-wider flex items-center gap-2">
           <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
           Live Update:
         </span>
 
-        {/* Teks Berjalan */}
         <div className="overflow-hidden w-full">
           <div className="whitespace-nowrap animate-marquee flex gap-16 font-medium">
             <span>
