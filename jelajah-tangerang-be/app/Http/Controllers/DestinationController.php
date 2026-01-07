@@ -33,6 +33,8 @@ class DestinationController extends Controller
             'latitude'    => 'required|numeric',
             'longitude'   => 'required|numeric',
             'photo'       => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'ticket_price' => 'required|string|max:50',
+            'facilities'   => 'nullable|string',
         ]);
 
         $photoPath = $request->file('photo')->store('destinations', 'public');
@@ -47,6 +49,8 @@ class DestinationController extends Controller
             'latitude'    => $request->latitude,
             'longitude'   => $request->longitude,
             'photo'       => $photoPath,
+            'ticket_price' => $request->ticket_price,
+            'facilities'   => $request->facilities,
         ]);
 
         return redirect()->route('destinasi.index')->with('success', 'Destinasi berhasil ditambahkan');
@@ -69,6 +73,8 @@ class DestinationController extends Controller
             'latitude'    => 'required|numeric',
             'longitude'   => 'required|numeric',
             'photo'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'ticket_price' => 'required|string|max:50',
+            'facilities'   => 'nullable|string',
         ]);
 
         $data = $request->except(['photo', '_token', '_method']);

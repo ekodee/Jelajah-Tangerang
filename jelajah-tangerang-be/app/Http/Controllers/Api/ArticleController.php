@@ -16,13 +16,12 @@ class ArticleController extends Controller
         $data = $articles->map(function ($article) {
             return [
                 'id'          => $article->id,
+                'slug'        => $article->slug, // TAMBAHAN: Slug dikirim di list
                 'title'       => $article->title,
                 'summary'     => Str::limit(strip_tags($article->content), 150),
-
-                'image'       => Str::startsWith($article->thumbnail, 'http')
-                    ? $article->thumbnail
-                    : asset('storage/' . $article->thumbnail),
-
+                'image'       => Str::startsWith($article->thumbnail, 'http') 
+                                    ? $article->thumbnail 
+                                    : asset('storage/' . $article->thumbnail),
                 'category'    => $article->category->name ?? 'Umum',
                 'date'        => $article->created_at->format('d M Y'),
                 'author'      => $article->user->name ?? 'Admin',
@@ -32,9 +31,13 @@ class ArticleController extends Controller
         return response()->json($data);
     }
 
-    public function show($id)
+    // Ubah parameter jadi $slug
+    public function show($slug)
     {
-        $article = Article::with(['user', 'category'])->find($id);
+        // Cari berdasarkan slug
+        $article = Article::with(['user', 'category'])
+            ->where('slug', $slug)
+            ->first();
 
         if (!$article) {
             return response()->json(['message' => 'Artikel tidak ditemukan'], 404);
@@ -42,17 +45,16 @@ class ArticleController extends Controller
 
         return response()->json([
             'id'          => $article->id,
+            'slug'        => $article->slug,
             'title'       => $article->title,
             'summary'     => Str::limit(strip_tags($article->content), 150),
-
-            'image'       => Str::startsWith($article->thumbnail, 'http')
-                ? $article->thumbnail
-                : asset('storage/' . $article->thumbnail),
-
+            'image'       => Str::startsWith($article->thumbnail, 'http') 
+                                ? $article->thumbnail 
+                                : asset('storage/' . $article->thumbnail),
             'category'    => $article->category->name ?? 'Umum',
             'date'        => $article->created_at->format('d M Y'),
             'author'      => $article->user->name ?? 'Admin',
-            'fullContent' => $article->content,
+            'fullContent' => $article->content, 
         ]);
     }
 }

@@ -10,7 +10,6 @@
         <form action="{{ route('destinasi.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row">
-                <!-- Kolom Kiri: Info Utama & Lokasi -->
                 <div class="col-12 col-lg-8">
                     <div class="card mb-4">
                         <div class="card-header">
@@ -92,7 +91,6 @@
                     </div>
                 </div>
 
-                <!-- Kolom Kanan: Media & Jam Operasional -->
                 <div class="col-12 col-lg-4">
                     <div class="card">
                         <div class="card-header">
@@ -105,6 +103,28 @@
                                     class="form-control @error('photo') is-invalid @enderror">
                                 <small class="text-muted">Format: jpg, png. Max: 2MB</small>
                                 @error('photo')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            {{-- INPUT BARU: HARGA TIKET --}}
+                            <div class="mb-3">
+                                <label class="form-label">Harga Tiket</label>
+                                <input type="text" name="ticket_price"
+                                    class="form-control @error('ticket_price') is-invalid @enderror"
+                                    value="{{ old('ticket_price') }}" placeholder="Contoh: Rp 5.000 atau Gratis">
+                                @error('ticket_price')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            {{-- INPUT BARU: FASILITAS --}}
+                            <div class="mb-3">
+                                <label class="form-label">Fasilitas (Pisahkan koma)</label>
+                                <input type="text" name="facilities"
+                                    class="form-control @error('facilities') is-invalid @enderror"
+                                    value="{{ old('facilities') }}" placeholder="Contoh: Parkir, Toilet, Wifi">
+                                @error('facilities')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>

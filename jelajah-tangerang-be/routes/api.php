@@ -12,11 +12,11 @@ use Illuminate\Support\Facades\Route;
 
 // Group Route Artikel
 Route::get('/articles', [ArticleController::class, 'index']);
-Route::get('/articles/{id}', [ArticleController::class, 'show']);
+Route::get('/articles/{slug}', [ArticleController::class, 'show']);
 
 // Group Route Destinasi
 Route::get('/destinations', [DestinationController::class, 'index']);
-Route::get('/destinations/{id}', [DestinationController::class, 'show']);
+Route::get('/destinations/{slug}', [DestinationController::class, 'show']);
 
 // Group Route Kategori
 Route::get('/categories', [CategoryController::class, 'index']);

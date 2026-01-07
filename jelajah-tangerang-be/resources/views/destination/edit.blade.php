@@ -18,7 +18,6 @@
                             <h5 class="card-title mb-0">Informasi Umum</h5>
                         </div>
                         <div class="card-body">
-                            {{-- BAGIAN INPUT TEXT TETAP SAMA (Name, Category, Description) --}}
                             <div class="row">
                                 <div class="col-md-8 mb-3">
                                     <label class="form-label">Nama Destinasi</label>
@@ -62,7 +61,6 @@
                             <h5 class="card-title mb-0">Lokasi & Peta</h5>
                         </div>
                         <div class="card-body">
-                            {{-- BAGIAN LOKASI TETAP SAMA --}}
                             <div class="mb-3">
                                 <label class="form-label">Alamat Lengkap</label>
                                 <textarea name="address" rows="2" class="form-control @error('address') is-invalid @enderror">{{ old('address', $destinasi->address) }}</textarea>
@@ -104,7 +102,6 @@
                                 <label class="form-label">Foto Saat Ini</label>
                                 @if ($destinasi->photo)
                                     <div class="mb-2">
-                                        {{-- LOGIC PERBAIKAN DI SINI --}}
                                         @php
                                             $imageSrc = Str::startsWith($destinasi->photo, 'http')
                                                 ? $destinasi->photo
@@ -126,6 +123,30 @@
                                 <small class="text-muted d-block mt-1">Biarkan kosong jika tidak ingin mengganti
                                     foto.</small>
                                 @error('photo')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            {{-- INPUT BARU: HARGA TIKET --}}
+                            <div class="mb-3">
+                                <label class="form-label">Harga Tiket</label>
+                                <input type="text" name="ticket_price"
+                                    class="form-control @error('ticket_price') is-invalid @enderror"
+                                    value="{{ old('ticket_price', $destinasi->ticket_price) }}"
+                                    placeholder="Contoh: Rp 5.000 atau Gratis">
+                                @error('ticket_price')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            {{-- INPUT BARU: FASILITAS --}}
+                            <div class="mb-3">
+                                <label class="form-label">Fasilitas (Pisahkan koma)</label>
+                                <input type="text" name="facilities"
+                                    class="form-control @error('facilities') is-invalid @enderror"
+                                    value="{{ old('facilities', $destinasi->facilities) }}"
+                                    placeholder="Contoh: Parkir, Toilet, Wifi">
+                                @error('facilities')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
