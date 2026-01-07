@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Destination;
-use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class DestinationController extends Controller
 {
@@ -21,9 +21,14 @@ class DestinationController extends Controller
                 'id'          => $item->id,
                 'name'        => $item->name,
                 'category'    => $item->category->name ?? 'Umum',
-                'image'       => asset('storage/' . $item->photo),
+
+                'image'       => Str::startsWith($item->photo, 'http')
+                    ? $item->photo
+                    : asset('storage/' . $item->photo),
+
                 'lat'         => (float) $item->latitude,
                 'lng'         => (float) $item->longitude,
+
                 'description' => $item->description,
                 'address'     => $item->address,
                 'openTime'    => $item->open_hours,
@@ -61,7 +66,11 @@ class DestinationController extends Controller
             'id'          => $item->id,
             'name'        => $item->name,
             'category'    => $item->category->name ?? 'Umum',
-            'image'       => asset('storage/' . $item->photo),
+
+            'image'       => Str::startsWith($item->photo, 'http')
+                ? $item->photo
+                : asset('storage/' . $item->photo),
+
             'lat'         => (float) $item->latitude,
             'lng'         => (float) $item->longitude,
             'description' => $item->description,
