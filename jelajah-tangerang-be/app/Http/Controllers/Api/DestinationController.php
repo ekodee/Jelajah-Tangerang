@@ -19,34 +19,33 @@ class DestinationController extends Controller
         $data = $destinations->map(function ($item) {
             return [
                 'id'          => $item->id,
+                'slug'        => $item->slug,
                 'name'        => $item->name,
                 'category'    => $item->category->name ?? 'Umum',
-
                 'image'       => Str::startsWith($item->photo, 'http')
                     ? $item->photo
                     : asset('storage/' . $item->photo),
-
                 'lat'         => (float) $item->latitude,
                 'lng'         => (float) $item->longitude,
-
                 'description' => $item->description,
                 'address'     => $item->address,
                 'openTime'    => $item->open_hours,
-                'price'       => 'Lihat di lokasi',
                 'rating'      => $item->reviews_avg_rating ? (float) number_format($item->reviews_avg_rating, 1) : 0,
                 'reviewCount' => $item->reviews_count,
-                'facilities'  => ['Parkir', 'Toilet', 'Musholla'],
+                'price'      => $item->ticket_price ?? 'Gratis',
+                'facilities' => $item->facilities ? array_map('trim', explode(',', $item->facilities)) : [],
             ];
         });
 
         return response()->json($data);
     }
 
-    public function show($id)
+    public function show($slug)
     {
         $item = Destination::with(['category', 'reviews.user'])
             ->withAvg('reviews', 'rating')
-            ->find($id);
+            ->where('slug', $slug)
+            ->first();
 
         if (!$item) {
             return response()->json(['message' => 'Destinasi tidak ditemukan'], 404);
@@ -64,13 +63,12 @@ class DestinationController extends Controller
 
         return response()->json([
             'id'          => $item->id,
+            'slug'        => $item->slug,
             'name'        => $item->name,
             'category'    => $item->category->name ?? 'Umum',
-
             'image'       => Str::startsWith($item->photo, 'http')
                 ? $item->photo
                 : asset('storage/' . $item->photo),
-
             'lat'         => (float) $item->latitude,
             'lng'         => (float) $item->longitude,
             'description' => $item->description,
@@ -79,7 +77,9 @@ class DestinationController extends Controller
             'price'       => 'Lihat di lokasi',
             'rating'      => $item->reviews_avg_rating ? (float) number_format($item->reviews_avg_rating, 1) : 0,
             'facilities'  => ['Parkir', 'Toilet', 'Musholla'],
-            'reviews'     => $reviewsList
+            'reviews'     => $reviewsList,
+            'price'      => $item->ticket_price ?? 'Gratis',
+            'facilities' => $item->facilities ? array_map('trim', explode(',', $item->facilities)) : [],
         ]);
     }
 }
