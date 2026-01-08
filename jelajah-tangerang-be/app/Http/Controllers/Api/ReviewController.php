@@ -24,12 +24,13 @@ class ReviewController extends Controller
         }
 
         $review = Review::create([
-            'user_id'        => $request->user_id ?? 1, // Dummy User ID
+            'user_id'        => $request->user()->id,
             'destination_id' => $request->destination_id,
             'article_id'     => $request->article_id, // Simpan ID Artikel
             'rating'         => $request->rating,
             'comment'        => $request->comment,
         ]);
+        $review->load('user');
 
         return response()->json(['message' => 'Ulasan berhasil dikirim', 'data' => $review], 201);
     }
