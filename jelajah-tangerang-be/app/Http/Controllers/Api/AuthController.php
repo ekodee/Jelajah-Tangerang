@@ -18,7 +18,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name'     => 'required|string|max:255',
             'email'    => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed', // butuh field password_confirmation di frontend
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
         if ($validator->fails()) {
@@ -44,8 +44,10 @@ class AuthController extends Controller
     }
 
     // LOGIN
+    // LOGIN
     public function login(Request $request)
     {
+        // 1. Cek apakah Email & Password cocok
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
                 'message' => 'Email atau password salah'
@@ -54,6 +56,14 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->firstOrFail();
 
+        // 2. [TAMBAHAN BARU] Cek apakah Email sudah diverifikasi?
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json([
+                'message' => 'Email Anda belum diverifikasi. Silakan cek inbox/spam email Anda untuk verifikasi.'
+            ], 403); // Return 403 Forbidden
+        }
+
+        // 3. Jika lolos verifikasi, baru buat Token
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([

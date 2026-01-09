@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\DestinationController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\VerifyEmailController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,3 +35,11 @@ Route::middleware('auth:sanctum')->group(function () {
       // Pindahkan route post review ke sini agar aman
       Route::post('/reviews', [ReviewController::class, 'store']);
 });
+
+Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, 'verify'])
+      ->middleware(['signed', 'throttle:6,1'])
+      ->name('verification.verify');
+
+Route::post('/email/verification-notification', [VerifyEmailController::class, 'resend'])
+      ->middleware(['throttle:6,1'])
+      ->name('verification.send');

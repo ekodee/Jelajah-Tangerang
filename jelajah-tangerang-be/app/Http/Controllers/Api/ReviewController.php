@@ -11,6 +11,12 @@ class ReviewController extends Controller
 {
     public function store(Request $request)
     {
+        if (!$request->user()->hasVerifiedEmail()) {
+            return response()->json([
+                'message' => 'Akun Anda belum diverifikasi. Silakan cek email Anda (termasuk folder Spam).'
+            ], 403);
+        }
+
         $validator = Validator::make($request->all(), [
             'rating'         => 'required|integer|min:1|max:5',
             'comment'        => 'required|string|max:500',
@@ -26,7 +32,7 @@ class ReviewController extends Controller
         $review = Review::create([
             'user_id'        => $request->user()->id,
             'destination_id' => $request->destination_id,
-            'article_id'     => $request->article_id, // Simpan ID Artikel
+            'article_id'     => $request->article_id,
             'rating'         => $request->rating,
             'comment'        => $request->comment,
         ]);
