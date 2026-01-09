@@ -34,7 +34,10 @@ const Register = () => {
     );
 
     if (result.success) {
-      navigate("/"); // Redirect ke home setelah sukses
+      alert(
+        "Registrasi Berhasil! \nSilakan cek inbox email Anda (atau Spam) untuk memverifikasi akun sebelum Login."
+      );
+      navigate("/login");
     } else {
       setErrors(result.errors);
     }
