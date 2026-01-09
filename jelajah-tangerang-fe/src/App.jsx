@@ -1,33 +1,29 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
-// Import Semua Halaman
+import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Articles from "./pages/Articles";
 import ArticleDetail from "./pages/ArticleDetail";
-import Destinations from "./pages/Destinations"; // Import Destinasi
-import About from "./pages/About"; // Import Tentang
+import Destinations from "./pages/Destinations";
 import DestinationDetail from "./pages/DestinationDetail";
+import About from "./pages/About";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
-function App() {
+const App = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/artikel" element={<Articles />} />
+      <Route path="/artikel/:slug" element={<ArticleDetail />} />
+      <Route path="/destinasi" element={<Destinations />} />
+      <Route path="/destinasi/:slug" element={<DestinationDetail />} />
+      <Route path="/about" element={<About />} />
 
-        {/* Routes Artikel */}
-        <Route path="/artikel" element={<Articles />} />
-        <Route path="/artikel/:slug" element={<ArticleDetail />} />
-
-        {/* Route Destinasi */}
-        <Route path="/destinasi" element={<Destinations />} />
-        <Route path="/destinasi/:slug" element={<DestinationDetail />} />
-
-        {/* Route Tentang */}
-        <Route path="/tentang" element={<About />} />
-      </Routes>
-    </Router>
+      {/* ROUTE AUTH */}
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+    </Routes>
   );
-}
+};
 
 export default App;

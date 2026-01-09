@@ -1,107 +1,115 @@
-import React, { useState, useEffect } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
-import { Menu, Moon, Sun, Search, Bell } from "lucide-react";
+import React, { useState, useEffect, useContext } from "react"; // Tambah useContext
+import { Link, useLocation } from "react-router-dom";
+import { Menu, X, Moon, Sun } from "lucide-react";
 import Button from "./Button";
+import { AuthContext } from "../context/AuthContext"; // Import AuthContext
 
 const Navbar = ({ toggleSidebar }) => {
-  const [isDark, setIsDark] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
   const location = useLocation();
 
+  // Ambil state user dan fungsi logout dari Context
+  const { user, logout } = useContext(AuthContext);
+
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", isDark);
-  }, [isDark]);
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [isDarkMode]);
 
-  const navLinkClass = ({ isActive }) =>
-    `text-sm font-semibold transition-all duration-300 relative group ${
-      isActive
-        ? "text-primary"
-        : "text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary"
-    }`;
+  const navLinks = [
+    { name: "Beranda", path: "/" },
+    { name: "Berita & Artikel", path: "/artikel" },
+    { name: "Destinasi", path: "/destinasi" },
+    { name: "Tentang Kami", path: "/about" },
+  ];
+
+  const isActive = (path) => location.pathname === path;
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-white/90 backdrop-blur-lg border-b border-gray-100 dark:border-gray-800 py-3 shadow-sm"
-          : "bg-white/50 backdrop-blur-sm py-5 border-b border-transparent dark:bg-gray-900/50"
-      } dark:text-white`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled
+          ? "bg-white/80 dark:bg-gray-900/80 backdrop-blur-md shadow-md py-3"
+          : "bg-white dark:bg-gray-900 py-5"
+      }`}
     >
       <div className="container mx-auto px-4 flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          <button
-            onClick={toggleSidebar}
-            className="lg:hidden p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            aria-label="Menu"
-          >
-            <Menu size={22} className="text-gray-700 dark:text-white" />
-          </button>
+        {/* LOGO */}
+        <Link
+          to="/"
+          className="text-2xl font-black tracking-tighter text-gray-900 dark:text-white flex items-center gap-1"
+        >
+          Jelajah<span className="text-primary">Tangerang</span>.
+        </Link>
 
-          <Link to="/" className="group flex items-center gap-2">
-            <span className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
-              Jelajah<span className="text-primary">Tangerang</span>.
-            </span>
-          </Link>
-        </div>
-
-        <div className="hidden lg:flex items-center gap-8">
-          {[
-            { path: "/", label: "Beranda" },
-            { path: "/artikel", label: "Berita & Artikel" },
-            { path: "/destinasi", label: "Destinasi" },
-            { path: "/tentang", label: "Tentang Kami" },
-          ].map((link) => (
-            <NavLink key={link.path} to={link.path} className={navLinkClass}>
-              {({ isActive }) => (
-                <>
-                  {link.label}
-                  <span
-                    className={`absolute -bottom-1 left-1/2 w-1 h-1 bg-primary rounded-full transform -translate-x-1/2 transition-all duration-300 ${
-                      isActive
-                        ? "opacity-100 scale-100"
-                        : "opacity-0 scale-0 group-hover:opacity-50"
-                    }`}
-                  ></span>
-                </>
-              )}
-            </NavLink>
+        {/* DESKTOP MENU */}
+        <div className="hidden md:flex items-center gap-8">
+          {navLinks.map((link) => (
+            <Link
+              key={link.name}
+              to={link.path}
+              className={`text-sm font-medium transition-colors hover:text-primary ${
+                isActive(link.path)
+                  ? "text-primary font-bold"
+                  : "text-gray-600 dark:text-gray-300"
+              }`}
+            >
+              {link.name}
+            </Link>
           ))}
         </div>
 
-        <div className="flex items-center gap-1 sm:gap-3">
-          <button className="p-2 rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors">
-            <Search size={20} />
-          </button>
-
-          <div className="h-6 w-px bg-gray-200 dark:bg-gray-700 mx-1 hidden sm:block"></div>
-
+        {/* ACTION BUTTONS (Login/Logout & Dark Mode) */}
+        <div className="hidden md:flex items-center gap-4">
           <button
-            onClick={() => setIsDark(!isDark)}
-            className="p-2 rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors"
-            aria-label="Toggle Theme"
+            onClick={() => setIsDarkMode(!isDarkMode)}
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 transition-colors"
           >
-            {isDark ? (
-              <Sun size={20} className="text-yellow-400" />
-            ) : (
-              <Moon size={20} />
-            )}
+            {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
           </button>
 
-          <div className="hidden sm:block ml-2">
-            <Button
-              variant="primary"
-              className="rounded-full px-6 py-2.5 text-sm font-semibold shadow-lg shadow-blue-500/20 hover:shadow-blue-500/40 transition-all transform hover:-translate-y-0.5"
-            >
-              Masuk
-            </Button>
-          </div>
+          {/* LOGIC LOGIN/LOGOUT */}
+          {user ? (
+            <div className="flex items-center gap-3 border-l pl-4 border-gray-200 dark:border-gray-700">
+              <div className="text-right hidden lg:block">
+                <p className="text-xs text-gray-500">Halo,</p>
+                <p className="text-sm font-bold text-gray-900 dark:text-white leading-none">
+                  {user.name}
+                </p>
+              </div>
+              <button
+                onClick={logout}
+                className="text-red-500 hover:text-red-700 text-sm font-bold bg-red-50 dark:bg-red-900/20 px-3 py-2 rounded-lg transition"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <Link to="/login">
+              <Button>Masuk</Button>
+            </Link>
+          )}
         </div>
+
+        {/* MOBILE MENU TOGGLE */}
+        <button
+          className="md:hidden text-gray-900 dark:text-white"
+          onClick={toggleSidebar}
+        >
+          <Menu size={28} />
+        </button>
       </div>
     </nav>
   );

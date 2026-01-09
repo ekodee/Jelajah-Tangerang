@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import InteractiveMap from "../components/InteractiveMap";
-// PERBAIKAN: Import Tag
 import {
   MapPin,
   Clock,
@@ -14,11 +13,19 @@ import {
   Tag,
 } from "lucide-react";
 import api from "../api";
+import { AuthContext } from "../context/AuthContext"; // Import Auth Context
 
 const DestinationDetail = () => {
-  const { slug } = useParams(); // Ambil SLUG
+  const { slug } = useParams();
+  const { user } = useContext(AuthContext); // Ambil status user login
+
   const [destination, setDestination] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // State untuk form review
+  const [newComment, setNewComment] = useState("");
+  const [newRating, setNewRating] = useState(5);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -28,7 +35,6 @@ const DestinationDetail = () => {
     const fetchDetail = async () => {
       try {
         setLoading(true);
-        // Fetch pakai slug
         const res = await api.get(`/destinations/${slug}`);
         setDestination(res.data);
       } catch (err) {
@@ -40,6 +46,47 @@ const DestinationDetail = () => {
     fetchDetail();
   }, [slug]);
 
+  // Fungsi Kirim Review
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    if (!user) return alert("Silakan login dulu!");
+
+    setIsSubmitting(true);
+    try {
+      const payload = {
+        destination_id: destination.id,
+        rating: newRating,
+        comment: newComment,
+      };
+
+      const res = await api.post("/reviews", payload);
+
+      // Update UI Realtime: Tambahkan komentar baru ke list tanpa reload
+      const newReviewData = {
+        id: res.data.data.id,
+        user: user.name, // Nama user yang sedang login
+        rating: newRating,
+        comment: newComment,
+        date: "Baru saja",
+      };
+
+      // Update state destination agar review baru langsung muncul
+      setDestination((prev) => ({
+        ...prev,
+        reviews: [newReviewData, ...prev.reviews],
+      }));
+
+      setNewComment("");
+      setNewRating(5);
+      alert("Terima kasih! Ulasan Anda berhasil dikirim.");
+    } catch (err) {
+      console.error(err);
+      alert("Gagal mengirim ulasan. Pastikan input valid.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
@@ -50,7 +97,7 @@ const DestinationDetail = () => {
 
   if (!destination)
     return (
-      <div className="min-h-screen flex items-center justify-center dark:bg-gray-900 dark:text-white">
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
         <h2>Destinasi Tidak Ditemukan</h2>
       </div>
     );
@@ -59,9 +106,8 @@ const DestinationDetail = () => {
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans">
       <Navbar toggleSidebar={() => {}} />
 
-      {/* FIX TAMPILAN: Tambahkan pt-20 agar konten tidak nabrak navbar */}
+      {/* HEADER IMAGE */}
       <div className="pt-20">
-        {/* HEADER IMAGE FULL WIDTH */}
         <div className="relative h-[50vh] w-full">
           <img
             src={destination.image}
@@ -129,8 +175,74 @@ const DestinationDetail = () => {
                 </a>
               </section>
 
+              {/* SECTION REVIEW */}
               <section className="pt-8 border-t border-gray-100 dark:border-gray-800">
                 <h3 className="text-2xl font-bold mb-6">Ulasan Pengunjung</h3>
+
+                {/* FORM INPUT REVIEW (Hanya jika login) */}
+                {user ? (
+                  <div className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-2xl mb-8 border border-blue-100 dark:border-gray-700">
+                    <h4 className="font-bold mb-4 flex items-center gap-2">
+                      <span className="bg-primary text-white text-xs px-2 py-1 rounded">
+                        Hai, {user.name}
+                      </span>
+                      Bagikan pengalamanmu
+                    </h4>
+                    <form onSubmit={handleSubmitReview}>
+                      <div className="mb-3">
+                        <label className="text-xs uppercase font-bold text-gray-500 mb-1 block">
+                          Rating
+                        </label>
+                        <div className="flex gap-2">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                              type="button"
+                              key={star}
+                              onClick={() => setNewRating(star)}
+                              className={`text-2xl transition ${
+                                star <= newRating
+                                  ? "text-yellow-400 scale-110"
+                                  : "text-gray-300"
+                              }`}
+                            >
+                              ★
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="mb-3">
+                        <textarea
+                          className="w-full p-3 rounded-xl border dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-primary text-gray-900 dark:text-white"
+                          rows="3"
+                          placeholder="Tulis ulasan jujur Anda di sini..."
+                          value={newComment}
+                          onChange={(e) => setNewComment(e.target.value)}
+                          required
+                        ></textarea>
+                      </div>
+                      <button
+                        disabled={isSubmitting}
+                        className="bg-primary text-white px-6 py-2 rounded-lg font-bold hover:bg-blue-700 transition disabled:opacity-50"
+                      >
+                        {isSubmitting ? "Mengirim..." : "Kirim Ulasan"}
+                      </button>
+                    </form>
+                  </div>
+                ) : (
+                  <div className="bg-orange-50 dark:bg-orange-900/20 p-6 rounded-2xl mb-8 text-center border border-orange-100 dark:border-orange-800">
+                    <p className="text-gray-600 dark:text-gray-300 mb-3">
+                      Ingin memberikan ulasan?
+                    </p>
+                    <Link
+                      to="/login"
+                      className="inline-block bg-white text-gray-900 border border-gray-200 px-6 py-2 rounded-full font-bold shadow-sm hover:bg-gray-50 transition"
+                    >
+                      Login untuk Menulis Review
+                    </Link>
+                  </div>
+                )}
+
+                {/* LIST REVIEW */}
                 {destination.reviews && destination.reviews.length > 0 ? (
                   <div className="space-y-6">
                     {destination.reviews.map((review) => (
@@ -183,7 +295,9 @@ const DestinationDetail = () => {
             {/* KOLOM KANAN: DETAIL & FASILITAS */}
             <aside className="space-y-6">
               <div className="p-6 rounded-2xl border border-gray-100 dark:border-gray-700 sticky top-24 bg-white dark:bg-gray-900 shadow-sm">
-                <h4 className="font-bold text-lg mb-6">Informasi Praktis</h4>
+                <h4 className="font-bold text-lg mb-6 text-gray-900 dark:text-white">
+                  Informasi Praktis
+                </h4>
                 <div className="space-y-4">
                   <div className="flex items-start gap-4">
                     <div className="p-2 bg-blue-50 dark:bg-blue-900/20 text-primary rounded-lg">
@@ -193,7 +307,7 @@ const DestinationDetail = () => {
                       <span className="block text-xs text-gray-400 uppercase font-bold">
                         Jam Buka
                       </span>
-                      <span className="font-medium">
+                      <span className="font-medium text-gray-900 dark:text-white">
                         {destination.openTime}
                       </span>
                     </div>
@@ -206,7 +320,9 @@ const DestinationDetail = () => {
                       <span className="block text-xs text-gray-400 uppercase font-bold">
                         Tiket Masuk
                       </span>
-                      <span className="font-medium">{destination.price}</span>
+                      <span className="font-medium text-gray-900 dark:text-white">
+                        {destination.price}
+                      </span>
                     </div>
                   </div>
                 </div>
