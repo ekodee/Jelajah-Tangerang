@@ -44,7 +44,6 @@ class AuthController extends Controller
     }
 
     // LOGIN
-    // LOGIN
     public function login(Request $request)
     {
         // 1. Cek apakah Email & Password cocok
@@ -66,9 +65,17 @@ class AuthController extends Controller
         // 3. Jika lolos verifikasi, baru buat Token
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        // Ambil nama role pertama (karena user biasanya cuma punya 1 role)
+        $role = $user->getRoleNames()->first();
+
         return response()->json([
             'message' => 'Login berhasil',
-            'data'    => $user,
+            'data'    => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $role,
+            ],
             'token'   => $token,
             'token_type' => 'Bearer'
         ]);
@@ -86,6 +93,15 @@ class AuthController extends Controller
 
     public function me(Request $request)
     {
-        return response()->json($request->user());
+        $user = $request->user();
+        $role = $user->getRoleNames()->first();
+
+        return response()->json([
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'role' => $role,
+            'email_verified_at' => $user->email_verified_at
+        ]);
     }
 }
