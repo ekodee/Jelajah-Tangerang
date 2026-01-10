@@ -6,7 +6,7 @@
 
         <ul class="sidebar-nav">
 
-            {{-- 1. DASHBOARD (Semua User Login Bisa Lihat) --}}
+            {{-- 1. DASHBOARD --}}
             <li class="sidebar-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                 <a class="sidebar-link" href="{{ route('dashboard') }}">
                     <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
@@ -14,13 +14,12 @@
             </li>
 
             {{-- 2. MENU EDITOR & SUPER ADMIN (Kelola Konten) --}}
-            {{-- Menggunakan Directive Spatie --}}
             @hasanyrole('super_admin|editor')
                 <li class="sidebar-header">
                     Wisata & Konten
                 </li>
 
-                {{-- KATEGORI (Aktif jika route kategori.* sedang dibuka) --}}
+                {{-- KATEGORI --}}
                 <li class="sidebar-item {{ request()->routeIs('kategori.*') ? 'active' : '' }}">
                     <a class="sidebar-link" href="{{ route('kategori.index') }}">
                         <i class="align-middle" data-feather="list"></i> <span class="align-middle">Kategori Wisata</span>
@@ -49,15 +48,15 @@
                 </li>
             @endhasanyrole
 
-            {{-- 3. MENU KHUSUS SUPER ADMIN (Fitur Fatal) --}}
+            {{-- 3. MENU KHUSUS SUPER ADMIN --}}
             @role('super_admin')
                 <li class="sidebar-header">
                     Administrator
                 </li>
 
-                {{-- Contoh Menu Kelola User (Nanti dibuat) --}}
+                {{-- PERBAIKAN DI SINI: Link diarahkan ke route('users.index') --}}
                 <li class="sidebar-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
-                    <a class="sidebar-link" href="#">
+                    <a class="sidebar-link" href="{{ route('users.index') }}">
                         <i class="align-middle" data-feather="users"></i> <span class="align-middle">Manajemen User</span>
                     </a>
                 </li>

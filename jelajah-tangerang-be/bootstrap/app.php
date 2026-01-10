@@ -13,8 +13,14 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'role' => '\Spatie\Permission\Middleware\Role::class',
-            'permission' => '\Spatie\Permission\Middleware\Permission::class',
+            // PERHATIKAN: Sekarang pakai akhiran 'Middleware'
+            // Sesuai path file yang Mas temukan tadi
+
+            'role' => 'Spatie\Permission\Middleware\RoleMiddleware',
+
+            'permission' => 'Spatie\Permission\Middleware\PermissionMiddleware',
+
+            'role_or_permission' => 'Spatie\Permission\Middleware\RoleOrPermissionMiddleware',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
