@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -28,6 +29,10 @@ Route::middleware('auth')->group(function () {
     Route::resource('destinasi', DestinationController::class);
     Route::resource('artikel', ArticleController::class);
     Route::resource('review', ReviewController::class);
+
+    Route::middleware(['role:super_admin'])->group(function () {
+        Route::resource('users', UserController::class);
+    });
 });
 
 require __DIR__ . '/auth.php';
