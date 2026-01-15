@@ -77,7 +77,7 @@
                 </button>
 
                 <p class="text-center text-xs text-gray-400 mt-6">
-                    &copy; {{ date('Y') }} Jelajah Tangerang CMS.
+                    &copy; {{ date('Y') }} MS - JelajahTangerang.
                 </p>
             </form>
         </div>

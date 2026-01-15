@@ -85,8 +85,7 @@
                 </div>
 
                 <div class="mt-12 text-center text-xs text-gray-400">
-                    &copy; {{ date('Y') }} Dinas Pariwisata Tangerang.<br>
-                    <span class="opacity-70">Develop by Winnicode Team</span>
+                    &copy; {{ date('Y') }} MS - JelajahTangerang.<br>
                 </div>
             </div>
         </div>

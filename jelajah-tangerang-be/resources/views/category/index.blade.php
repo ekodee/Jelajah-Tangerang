@@ -23,7 +23,7 @@
 
         <div class="card flex-fill">
             <div class="card-header">
-                <h5 class="card-title mb-0">Daftar Kategori Destinasi</h5>
+                <h5 class="card-title mb-0">Daftar Kategori Destinasi & Artikel</h5>
             </div>
             <div class="table-responsive">
                 <table class="table table-hover my-0">
@@ -38,16 +38,21 @@
                         @forelse($categories as $category)
                             <tr>
                                 <td class="align-middle">{{ $loop->iteration }}</td>
-                                <td class="align-middle fw-bold text-dark">{{ $category->name }}</td>
+                                <td class="align-middle">
+                                    <span class="fw-bold text-dark">{{ $category->name }}</span>
+                                    <br>
+                                    <small class="text-muted">Slug: {{ $category->slug }}</small>
+                                </td>
                                 <td class="table-action text-end align-middle">
-                                    <a href="{{ route('kategori.edit', $category->id) }}" class="text-info me-2">
+                                    <a href="{{ route('kategori.edit', $category->id) }}" class="text-info me-2"
+                                        title="Edit">
                                         <i class="align-middle" data-feather="edit-2"></i>
                                     </a>
                                     <form action="{{ route('kategori.destroy', $category->id) }}" method="POST"
                                         class="d-inline" onsubmit="return confirm('Yakin hapus kategori ini?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-link p-0 text-danger">
+                                        <button type="submit" class="btn btn-link p-0 text-danger" title="Hapus">
                                             <i class="align-middle" data-feather="trash"></i>
                                         </button>
                                     </form>
@@ -57,16 +62,18 @@
                             <tr>
                                 <td colspan="3" class="text-center py-5">
                                     <i class="text-muted" data-feather="grid" style="width: 48px; height: 48px;"></i>
-                                    <p class="mt-2 mb-0">Belum ada kategori.</p>
+                                    <p class="mt-2 mb-0">Belum ada kategori data.</p>
                                 </td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
+
+            {{-- PAGINATION CUSTOM --}}
             @if ($categories->hasPages())
                 <div class="card-footer py-4">
-                    {{ $categories->links('vendor.pagination.bootstrap-5') }}
+                    {{ $categories->links('pagination.adminkit') }}
                 </div>
             @endif
         </div>

@@ -4,77 +4,125 @@
     <div class="container-fluid p-0">
         <div class="mb-3">
             <h1 class="h3 d-inline align-middle">Edit Review</h1>
+            <p class="text-muted">Perbarui ulasan atau testimoni pengguna.</p>
         </div>
 
-        <div class="row">
-            <div class="col-12 col-lg-6">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Form Edit Ulasan</h5>
+        <form action="{{ route('review.update', $review->id) }}" method="POST">
+            @csrf
+            @method('PUT')
+
+            <div class="row">
+                <div class="col-12 col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Target Ulasan</h5>
+                        </div>
+                        <div class="card-body">
+                            {{-- ALERT INFO --}}
+                            <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                                <div class="alert-icon">
+                                    <i class="align-middle" data-feather="info"></i>
+                                </div>
+                                <div class="alert-message">
+                                    <strong>Perhatian:</strong> Pastikan hanya salah satu target yang dipilih (Destinasi
+                                    <strong>ATAU</strong> Artikel).
+                                </div>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Pilih Destinasi</label>
+                                    <select name="destination_id"
+                                        class="form-select @error('destination_id') is-invalid @enderror">
+                                        <option value="">-- Tidak Memilih Destinasi --</option>
+                                        @foreach ($destinations as $dest)
+                                            <option value="{{ $dest->id }}"
+                                                {{ old('destination_id', $review->destination_id) == $dest->id ? 'selected' : '' }}>
+                                                {{ $dest->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('destination_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold">Pilih Artikel</label>
+                                    <select name="article_id" class="form-select @error('article_id') is-invalid @enderror">
+                                        <option value="">-- Tidak Memilih Artikel --</option>
+                                        @foreach ($articles as $art)
+                                            <option value="{{ $art->id }}"
+                                                {{ old('article_id', $review->article_id) == $art->id ? 'selected' : '' }}>
+                                                {{ $art->title }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('article_id')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Isi Komentar</label>
+                                <textarea name="comment" rows="6" class="form-control @error('comment') is-invalid @enderror"
+                                    placeholder="Tuliskan pengalaman atau pendapat...">{{ old('comment', $review->comment) }}</textarea>
+                                @error('comment')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <form action="{{ route('review.update', $review->id) }}" method="POST">
-                            @csrf
-                            @method('PUT')
+                </div>
 
-                            <div class="alert alert-info py-2 mb-3">
-                                <small>Edit target review jika diperlukan (Pilih salah satu).</small>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Destinasi</label>
-                                <select name="destination_id"
-                                    class="form-select @error('destination_id') is-invalid @enderror">
-                                    <option value="">-- Tidak Dipilih --</option>
-                                    @foreach ($destinations as $dest)
-                                        <option value="{{ $dest->id }}"
-                                            {{ old('destination_id', $review->destination_id) == $dest->id ? 'selected' : '' }}>
-                                            {{ $dest->name }}
-                                        </option>
-                                    @endforeach
+                <div class="col-12 col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Penilaian</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Berikan Rating</label>
+                                <select name="rating"
+                                    class="form-select form-select-lg @error('rating') is-invalid @enderror">
+                                    <option value="5" {{ old('rating', $review->rating) == 5 ? 'selected' : '' }}>
+                                        ⭐⭐⭐⭐⭐ (Sempurna)
+                                    </option>
+                                    <option value="4" {{ old('rating', $review->rating) == 4 ? 'selected' : '' }}>
+                                        ⭐⭐⭐⭐ (Bagus)
+                                    </option>
+                                    <option value="3" {{ old('rating', $review->rating) == 3 ? 'selected' : '' }}>
+                                        ⭐⭐⭐ (Cukup)
+                                    </option>
+                                    <option value="2" {{ old('rating', $review->rating) == 2 ? 'selected' : '' }}>
+                                        ⭐⭐ (Kurang)
+                                    </option>
+                                    <option value="1" {{ old('rating', $review->rating) == 1 ? 'selected' : '' }}>
+                                        ⭐ (Buruk)
+                                    </option>
                                 </select>
-                            </div>
-
-                            <div class="mb-3">
-                                <label class="form-label">Artikel</label>
-                                <select name="article_id" class="form-select @error('article_id') is-invalid @enderror">
-                                    <option value="">-- Tidak Dipilih --</option>
-                                    @foreach ($articles as $art)
-                                        <option value="{{ $art->id }}"
-                                            {{ old('article_id', $review->article_id) == $art->id ? 'selected' : '' }}>
-                                            {{ $art->title }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                @error('rating')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
 
                             <hr>
 
-                            <div class="mb-3">
-                                <label class="form-label">Rating</label>
-                                <select name="rating" class="form-select @error('rating') is-invalid @enderror">
-                                    @for ($i = 5; $i >= 1; $i--)
-                                        <option value="{{ $i }}"
-                                            {{ old('rating', $review->rating) == $i ? 'selected' : '' }}>
-                                            {{ $i }} Bintang
-                                        </option>
-                                    @endfor
-                                </select>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="align-middle me-1" data-feather="save"></i> Update Review
+                                </button>
+                                <a href="{{ route('review.index') }}" class="btn btn-outline-secondary">
+                                    Batal
+                                </a>
                             </div>
-
-                            <div class="mb-4">
-                                <label class="form-label">Komentar</label>
-                                <textarea name="comment" rows="4" class="form-control @error('comment') is-invalid @enderror">{{ old('comment', $review->comment) }}</textarea>
-                            </div>
-
-                            <div class="d-flex justify-content-between">
-                                <a href="{{ route('review.index') }}" class="btn btn-outline-secondary">Batal</a>
-                                <button type="submit" class="btn btn-primary">Update Review</button>
-                            </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 @endsection
