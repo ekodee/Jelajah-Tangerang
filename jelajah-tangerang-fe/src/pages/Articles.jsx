@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import Card from "../components/Card";
 import Pagination from "../components/Pagination";
 import { Search, Filter, Loader2 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"; // Pastikan Link diimport
 import api from "../api";
 
 const Articles = () => {
@@ -84,8 +84,13 @@ const Articles = () => {
             </div>
           ) : (
             <>
+              {/* FEATURED ARTICLE SECTION */}
               {showFeatured && (
-                <div className="mb-16 relative rounded-3xl overflow-hidden group cursor-pointer shadow-2xl h-[450px]">
+                // UPDATE: Bungkus seluruh Featured Card dengan Link juga agar bisa diklik semua
+                <Link
+                  to={`/artikel/${featuredArticle.slug}`}
+                  className="block mb-16 relative rounded-3xl overflow-hidden group cursor-pointer shadow-2xl h-[450px]"
+                >
                   <img
                     src={featuredArticle.image}
                     alt={featuredArticle.title}
@@ -99,23 +104,22 @@ const Articles = () => {
                     <span className="bg-accent text-white text-xs font-bold px-3 py-1 rounded-full w-fit mb-4 uppercase">
                       Editor's Pick
                     </span>
-                    <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4 leading-tight max-w-4xl">
+                    <h2 className="text-3xl md:text-5xl font-extrabold text-white mb-4 leading-tight max-w-4xl group-hover:text-accent transition-colors">
                       {featuredArticle.title}
                     </h2>
                     <p className="text-gray-300 line-clamp-2 max-w-2xl mb-6 text-lg md:text-xl font-light">
                       {featuredArticle.summary}
                     </p>
-                    {/* UPDATE: Gunakan Slug */}
-                    <Link
-                      to={`/artikel/${featuredArticle.slug}`}
-                      className="bg-white/10 hover:bg-white text-white hover:text-black backdrop-blur-md border border-white/30 px-8 py-3 rounded-full font-bold transition-all w-fit"
-                    >
+
+                    {/* Tombol visual tetap ada, tapi seluruh card sebenarnya sudah bisa diklik */}
+                    <div className="bg-white/10 group-hover:bg-white text-white group-hover:text-black backdrop-blur-md border border-white/30 px-8 py-3 rounded-full font-bold transition-all w-fit">
                       Baca Lengkap
-                    </Link>
+                    </div>
                   </div>
-                </div>
+                </Link>
               )}
 
+              {/* SEARCH & FILTER BAR */}
               <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-10 sticky top-20 z-30 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg p-4 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm">
                 <div className="relative w-full md:w-96">
                   <Search
@@ -147,22 +151,29 @@ const Articles = () => {
                 </div>
               </div>
 
+              {/* GRID ARTICLES */}
               {currentArticles.length > 0 ? (
                 <>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {currentArticles.map((item) => (
-                      <Card
+                      // UPDATE: Bungkus Card dengan Link
+                      <Link
+                        to={`/artikel/${item.slug}`}
                         key={item.id}
-                        // UPDATE: Kirim Slug ke component Card (pastikan Card.jsx mendukung link ke slug)
-                        // Atau jika Card.jsx handle link manual, pastikan properti id/slug benar
-                        id={item.slug} // Trik: kirim slug sebagai ID agar link di Card benar
-                        title={item.title}
-                        subtitle={item.summary}
-                        image={item.image}
-                        category={item.category}
-                        date={item.date}
-                        type="article"
-                      />
+                        className="group block h-full hover:-translate-y-1 transition-transform duration-300"
+                      >
+                        <Card
+                          // Kita tidak perlu mengandalkan internal button di Card lagi
+                          // Cukup kirim props untuk tampilan
+                          id={item.slug}
+                          title={item.title}
+                          subtitle={item.summary}
+                          image={item.image}
+                          category={item.category}
+                          date={item.date}
+                          type="article"
+                        />
+                      </Link>
                     ))}
                   </div>
                   <Pagination
