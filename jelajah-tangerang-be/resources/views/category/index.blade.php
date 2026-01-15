@@ -66,7 +66,7 @@
             </div>
             @if ($categories->hasPages())
                 <div class="card-footer py-4">
-                    {{ $categories->links() }}
+                    {{ $categories->links('vendor.pagination.bootstrap-5') }}
                 </div>
             @endif
         </div>

@@ -10,35 +10,54 @@ use App\Models\Review;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. BERSIHKAN DATABASE (Reset ID dari 1 lagi)
+        // 1. BERSIHKAN DATABASE (Agar ID kembali ke 1)
         Schema::disableForeignKeyConstraints();
+        
+        // Hapus data transaksi/konten dulu
         Review::truncate();
         Article::truncate();
         Destination::truncate();
+        
+        // Hapus data master
         Category::truncate();
         User::truncate();
+        
+        // Opsional: Reset Role jika perlu (hati-hati jika role sudah disetting manual di migrasi lain)
+        // Role::truncate(); 
+        
         Schema::enableForeignKeyConstraints();
 
-        echo "Database cleaned.\n";
+        echo "Database cleaned. Siap untuk data asli.\n";
 
-        // 2. BUAT AKUN ADMIN
-        $admin = User::factory()->create([
-            'name' => 'Admin Jelajah',
-            'email' => 'admin@jelajah.com',
-            'password' => bcrypt('password'), // password login
+        // 2. SETUP ROLE (PENTING: Pastikan Role ada sebelum assign ke user)
+        // Cek dulu apakah role sudah ada, kalau belum buat baru
+        $roleAdmin = Role::firstOrCreate(['name' => 'super_admin']);
+        $roleEditor = Role::firstOrCreate(['name' => 'editor']);
+        $roleUser = Role::firstOrCreate(['name' => 'user']);
+        
+        echo "Roles checked/created.\n";
+
+        // 3. BUAT 1 AKUN SUPER ADMIN (Pegang akun ini baik-baik)
+        $admin = User::create([
+            'name' => 'Super Admin',
+            'email' => 'admin@jelajah.com', // Ganti dengan email asli admin dinas
+            'password' => bcrypt('password'), // Ganti dengan password kuat nanti
+            'email_verified_at' => now(),
         ]);
-        echo "Admin created: admin@jelajah.com\n";
 
-        // 3. BUAT 20 USER DUMMY (Untuk jadi komentator)
-        $users = User::factory(20)->create();
-        echo "20 Dummy Users created.\n";
+        // Berikan jabatan Super Admin
+        $admin->assignRole($roleAdmin);
 
-        // 4. BUAT KATEGORI
+        echo "✅ Admin Asli Created: admin@jelajah.com\n";
+
+        // 4. BUAT KATEGORI STANDAR (Bisa ditambah/edit nanti di CMS)
         $categories = ['Wisata Alam', 'Kuliner', 'Sejarah', 'Religi', 'Edukasi', 'Belanja', 'Event'];
         foreach ($categories as $cat) {
             Category::create([
@@ -46,42 +65,9 @@ class DatabaseSeeder extends Seeder
                 'slug' => Str::slug($cat)
             ]);
         }
-        echo "Categories created.\n";
+        echo "✅ Default Categories Created.\n";
 
-        // 5. BUAT 30 DESTINASI + REVIEW
-        echo "Generating Destinations...\n";
-        Destination::factory(30)->create()->each(function ($dest) use ($users) {
-            // Setiap destinasi dikasih 3 s/d 8 review acak
-            $randomReviewCount = rand(3, 8);
-
-            for ($i = 0; $i < $randomReviewCount; $i++) {
-                Review::factory()->create([
-                    'destination_id' => $dest->id,
-                    'article_id'     => null, // Pastikan article null
-                    'user_id'        => $users->random()->id, // Pilih user acak
-                    'rating'         => rand(3, 5),
-                    'comment'        => 'Tempatnya bagus banget! ' . fake()->sentence(),
-                ]);
-            }
-        });
-
-        // 6. BUAT 50 ARTIKEL + KOMENTAR
-        echo "Generating Articles...\n";
-        Article::factory(50)->create()->each(function ($art) use ($users) {
-            // Setiap artikel dikasih 0 s/d 5 komentar acak
-            $randomCommentCount = rand(0, 5);
-
-            for ($i = 0; $i < $randomCommentCount; $i++) {
-                Review::factory()->create([
-                    'destination_id' => null, // Pastikan dest null
-                    'article_id'     => $art->id,
-                    'user_id'        => $users->random()->id,
-                    'rating'         => 5, // Komentar artikel biasanya ga pake rating, kasih 5 aja default
-                    'comment'        => 'Artikel yang sangat informatif. ' . fake()->sentence(),
-                ]);
-            }
-        });
-
-        echo "✅ SEEDING COMPLETE! 🚀\n";
+        echo "---------------------------------------------\n";
+        echo "SYSTEM READY! Silakan login dan input data asli.\n";
     }
 }

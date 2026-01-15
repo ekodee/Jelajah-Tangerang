@@ -106,7 +106,7 @@
             </div>
             @if ($articles->hasPages())
                 <div class="card-footer py-4">
-                    {{ $articles->links() }}
+                    {{ $articles->links('vendor.pagination.bootstrap-5') }}
                 </div>
             @endif
         </div>
