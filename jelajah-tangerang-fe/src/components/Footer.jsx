@@ -128,8 +128,8 @@ const Footer = () => {
               <li className="flex items-start gap-3">
                 <MapPin className="shrink-0 text-primary" size={20} />
                 <span className="text-sm">
-                  Jl. Jend. Sudirman No.1, Babakan, Kec. Tangerang, Kota
-                  Tangerang, Banten 15118
+                  Perum 2, Kec. Kelapa Dua,
+                  Tangerang, Banten
                 </span>
               </li>
               <li className="flex items-center gap-3">
