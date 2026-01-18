@@ -73,6 +73,24 @@ php artisan migrate
 7. Jalankan server
    Backend akan berjalan di: http://localhost:8000
 
+## 🔐 Login Super Admin (Demo)
+
+> [!IMPORTANT]
+> **AKSES SUPER ADMIN**
+>
+> Gunakan kredensial berikut untuk mengakses **Dashboard Admin** secara penuh. Akun ini dibuat otomatis saat Anda menjalankan `db:seed`.
+
+| Key | Value | Salin Cepat |
+| :--- | :--- | :--- |
+| **Email** | `admin@jelajah.com` | `admin@jelajah.com` |
+| **Password** | `password` | `password` |
+
+<br>
+
+> [!WARNING]
+> **Catatan Keamanan:**
+> Akun ini hanya untuk keperluan **Development** dan **Demo**. Pada lingkungan produksi (Production), **WAJIB** mengganti password atau menghapus akun default ini demi keamanan sistem.
+
 🔐 API
 Endpoint API didefinisikan pada file: routes/api.php
 API digunakan oleh frontend untuk mengambil dan mengelola data aplikasi.
