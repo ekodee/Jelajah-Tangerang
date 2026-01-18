@@ -1,81 +1,78 @@
-# 🗺️ Blog Pariwisata Kota Tangerang
+# Backend - Jelajah Tangerang ⚙️
 
-Ini adalah repositori untuk proyek website blog pariwisata yang fokus pada destinasi, acara, dan informasi wisata terkini di Kota Tangerang. Dibangun menggunakan framework **Laravel** untuk backend dan dikembangkan dengan antarmuka yang ramah pengguna.
+Backend dari aplikasi **Jelajah Tangerang** dibangun menggunakan **Laravel** dan berfungsi sebagai penyedia REST API untuk frontend. Backend menangani pengelolaan data, autentikasi, serta logika bisnis aplikasi.
 
-## 🌟 Fitur Utama
+## ⚙️ Teknologi yang Digunakan
 
-* **Daftar Destinasi:** Menampilkan daftar lengkap tempat-tempat wisata, lengkap dengan deskripsi, lokasi, dan galeri foto.
-* **Artikel/Blog:** Menyajikan berbagai artikel mendalam mengenai *event*, kuliner, sejarah, dan perkembangan pariwisata di Kota Tangerang.
-* **Pencarian & Filter:** Memungkinkan pengguna untuk mencari destinasi atau artikel berdasarkan kata kunci atau kategori.
-* **Dasbor Admin:** Area khusus untuk pengelola untuk menambah, mengedit, dan menghapus destinasi serta artikel.
+- Laravel
+- PHP
+- MySQL
+- Laravel Sanctum (Autentikasi)
+- REST API
 
-## 🛠️ Teknologi yang Digunakan
+## 📂 Struktur Folder (Umum)
 
-Proyek ini dikembangkan menggunakan stack teknologi berikut:
+```text
+be/
+│
+├── app/
+│ ├── Http/
+│ ├── Models/
+│ └── Controllers/
+├── database/
+│ ├── migrations/
+│ └── seeders/
+├── routes/
+│ └── api.php
+└── .env
+```
 
-* **Backend:** **PHP** dengan **Laravel 12**
-* **Database:** **MySQL** 
-* **Frontend:** **React JS**
+## 🚀 Fitur Utama
 
-## 🚀 Instalasi Lokal
+- Autentikasi pengguna
+- CRUD destinasi wisata
+- CRUD artikel
+- CRUD kategori
+- API data lokasi dan peta
+- Manajemen data melalui dashboard admin
 
-Ikuti langkah-langkah berikut untuk menjalankan proyek ini di mesin lokal Anda:
+## ▶️ Menjalankan Backend
 
-### Prasyarat
+1. Masuk ke folder backend
 
-Pastikan Anda telah menginstal hal-hal berikut:
+```bash
+cd jelajah-tangerang-be
+```
 
-* **PHP** (Versi minimal yang dibutuhkan Laravel12)
-* **Composer**
-* **Node.js & npm/Yarn**
-* **Git**
+2. Install dependencies
 
-### Langkah-Langkah
+```bash
+composer install
+```
 
-1.  **Kloning Repositori:**
-    ```bash
-    git clone 
-    cd nama-folder-proyek
-    ```
+3. Copy file environment
 
-2.  **Instal Dependensi PHP:**
-    ```bash
-    composer install
-    ```
+```bash
+cp .env.example .env
+```
 
-3.  **Pengaturan Environment:**
-    * Duplikasi file `.env.example` menjadi `.env`:
-        ```bash
-        cp .env.example .env
-        ```
-    * Buat *Application Key* baru:
-        ```bash
-        php artisan key:generate
-        ```
-    * Edit file `.env` dan konfigurasikan detail database Anda (`DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`, dll.).
+4. Generate application key
 
-4.  **Migrasi Database:**
-    ```bash
-    php artisan migrate
-    ```
-    *(Opsional: Jika Anda memiliki *seeder* untuk data awal destinasi/artikel, jalankan:* `php artisan db:seed` *)
+```bash
+php artisan key:generate
+```
 
-5.  **Instal dan Kompilasi Frontend Assets (Jika ada):**
-    ```bash
-    npm install
-    npm run dev  # Atau npm run build / npm run watch
-    ```
+5. Konfigurasi database di file .env
 
-6.  **Jalankan Server Lokal:**
-    ```bash
-    php artisan serve
-    ```
+6. Jalankan migrasi database
 
-Proyek sekarang dapat diakses di `http://127.0.0.1:8000` (atau port lain yang ditunjukkan).
+```bash
+php artisan migrate
+```
 
+7. Jalankan server
+   Backend akan berjalan di: http://localhost:8000
 
-## ✍️ Pengembang
-
-Proyek ini dikembangkan oleh:
-
-* Ekoode
+🔐 API
+Endpoint API didefinisikan pada file: routes/api.php
+API digunakan oleh frontend untuk mengambil dan mengelola data aplikasi.
