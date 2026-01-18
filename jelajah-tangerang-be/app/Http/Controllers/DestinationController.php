@@ -73,7 +73,7 @@ class DestinationController extends Controller
             'latitude'    => 'required|numeric',
             'longitude'   => 'required|numeric',
             'photo'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'ticket_price' => 'required|string|max:50',
+            'ticket_price' => 'required|string|max:150',
             'facilities'   => 'nullable|string',
         ]);
 
