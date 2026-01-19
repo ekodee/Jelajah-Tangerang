@@ -91,6 +91,36 @@ php artisan migrate
 > **Catatan Keamanan:**
 > Akun ini hanya untuk keperluan **Development** dan **Demo**. Pada lingkungan produksi (Production), **WAJIB** mengganti password atau menghapus akun default ini demi keamanan sistem.
 
+<br>
+## 📧 Konfigurasi Layanan Email
+
+Fitur **Lupa Password** dan **Verifikasi Email** memerlukan konfigurasi pada file `.env`. Silakan pilih salah satu opsi di bawah ini agar fitur tersebut tidak error saat diuji:
+
+### 🟢 Opsi 1: Mode Log (Disarankan untuk Pengujian)
+Gunakan mode ini jika Anda hanya ingin menguji fungsi tanpa menggunakan akun email asli. Email tidak akan dikirim ke inbox, melainkan ditulis ke file log sistem.
+
+1. Buka file `.env`.
+2. Ubah konfigurasi mail menjadi:
+   ```env
+   MAIL_MAILER=log
+   ```
+3. Cara Melihat Email: Buka file `storage/logs/laravel.log.` Link reset password atau verifikasi akan muncul di bagian paling bawah file tersebut.
+
+### 🟠 Opsi 2: Mode Live (SMTP Gmail)
+Gunakan mode ini jika Anda ingin aplikasi mengirim email sungguhan.
+1. Pastikan Anda memiliki Google App Password (bukan password login biasa).
+2. Buka file .env dan isi konfigurasi berikut:
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=email_anda@gmail.com
+MAIL_PASSWORD=app_password_anda_disini
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="admin@jelajah-tangerang.com"
+```
+
+
 🔐 API
 Endpoint API didefinisikan pada file: routes/api.php
 API digunakan oleh frontend untuk mengambil dan mengelola data aplikasi.
