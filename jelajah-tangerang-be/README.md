@@ -62,9 +62,17 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-5. **Konfigurasi database**
-   Buka file `.env` dan sesuaikan koneksi database (`DB_DATABASE`, `DB_USERNAME`, dll).
-   > **PENTING:** Pastikan juga mengubah `APP_URL` di file `.env` agar sesuai dengan alamat server Anda (biasanya `http://localhost:8000` atau `http://127.0.0.1:8000`). Ini sangat berpengaruh pada link gambar agar tidak *broken*.
+5. **Konfigurasi Environment (.env)**
+   Buka file `.env` dan lakukan pengaturan berikut:
+   
+   * **Database:** Sesuaikan `DB_DATABASE`, `DB_USERNAME`, dll.
+   * **URL Aplikasi (Wajib):**
+       Pastikan `APP_URL` dan `FRONTEND_URL` diisi dengan benar agar fitur reset password dan gambar berjalan lancar.
+       ```env
+       APP_URL=http://localhost:8000
+       FRONTEND_URL=http://localhost:5173
+       ```
+   > **Catatan:** `APP_URL` digunakan untuk base URL gambar, sedangkan `FRONTEND_URL` digunakan untuk redirect link email ke aplikasi React.
 
 6. **Jalankan migrasi database**
 ```bash
