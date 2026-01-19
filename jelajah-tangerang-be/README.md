@@ -38,39 +38,45 @@ be/
 
 ## ▶️ Menjalankan Backend
 
-1. Masuk ke folder backend
+1. **Masuk ke folder backend**
 
 ```bash
 cd jelajah-tangerang-be
 ```
 
-2. Install dependencies
+2. **Install dependencies**
 
 ```bash
 composer install
 ```
 
-3. Copy file environment
+3. **Copy file environment**
 
 ```bash
 cp .env.example .env
 ```
 
-4. Generate application key
+4. **Generate application key**
 
 ```bash
 php artisan key:generate
 ```
 
-5. Konfigurasi database di file .env
+5. **Konfigurasi database**
+   Buka file `.env` dan sesuaikan koneksi database (`DB_DATABASE`, `DB_USERNAME`, dll).
+   > **PENTING:** Pastikan juga mengubah `APP_URL` di file `.env` agar sesuai dengan alamat server Anda (biasanya `http://localhost:8000` atau `http://127.0.0.1:8000`). Ini sangat berpengaruh pada link gambar agar tidak *broken*.
 
-6. Jalankan migrasi database
-
+6. **Jalankan migrasi database**
 ```bash
-php artisan migrate
+   php artisan migrate --seed
 ```
 
-7. Jalankan server
+7. **Link Storage (Wajib agar gambar muncul)**
+```bash
+   php artisan storage:link
+```
+
+8. **Jalankan server**
    Backend akan berjalan di: http://localhost:8000
 
 ## 🔐 Login Super Admin (Demo)
