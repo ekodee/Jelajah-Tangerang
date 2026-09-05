@@ -1,6 +1,6 @@
 # Jelajah Tangerang 🌆
 
-Jelajah Tangerang adalah aplikasi berbasis web yang bertujuan untuk menyediakan informasi seputar destinasi wisata, artikel, dan lokasi menarik di wilayah Kota Tangerang. Aplikasi ini dikembangkan sebagai bagian dari kegiatan magang dengan posisi **Fullstack Developer**.
+Jelajah Tangerang adalah aplikasi berbasis web yang bertujuan untuk menyediakan informasi seputar destinasi wisata, artikel, dan lokasi menarik di wilayah Kota Tangerang.
 
 Repository ini menggunakan konsep **monorepo**, yang di dalamnya terdapat dua bagian utama:
 
@@ -41,6 +41,5 @@ jelajah-tangerang/
 ## 👨‍💻 Developer
 
 Dikembangkan oleh **Muhamad safii**  
-Sebagai bagian dari kegiatan magang di **PT. Winnicode Garuda Teknologi**
 
 > 📌 Dokumentasi lebih detail terdapat pada masing-masing folder frontend dan backend.
